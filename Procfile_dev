@@ -1,0 +1,4 @@
+web: bundle exec puma -C config/puma.rb
+rpush: bundle exec rpush start -e $RAILS_ENV -f
+webpacker: ./bin/webpack-dev-server
+log: tail -f log/development.log

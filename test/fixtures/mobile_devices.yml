@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one:
+ device_type: ios
+ device_token: febdb20eee690413baf649482664e7bbe0313f27f9959cf705bdbe8e79e0a5a4
+ mobile_user: one
+
+two:
+ device_type: android
+ device_token: xxx
+ mobile_user: one
