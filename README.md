@@ -9,30 +9,29 @@
     brew install libpq
     ```
     
-2. Install the gem foreman
-   
-       ```
-       gem install foreman
-       ```
-
-3. Install docker by [link](https://docs.docker.com/docker-for-mac/install/)
-
-4. Run database
-
+2. Install Yarn
     ```
-    docker-compose up
+    brew install yarn
     ```
 
-5. Create db and run migrations
+3. Install Docker by [link](https://docs.docker.com/docker-for-mac/install/)
+
+4. Create db and run migrations
 
     ```
+    docker-compose up -d
     rails db:setup
+    ```
+    
+5. Install frontend dependencies
+    ```
+    yarn install
     ```
     
 6. Run a Procfile_dev processes
 
     ```
-    foreman start -f Procfile_dev
+    yarn start
     ```
     
 ## How to get access token?
