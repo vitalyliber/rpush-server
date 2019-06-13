@@ -1,5 +1,8 @@
 {
-  "name": "pusher",
+  "name": "rpush-server",
+  "engines": {
+    "node": "^8.15.0"
+  },
   "private": true,
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
