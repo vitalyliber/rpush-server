@@ -1,4 +1,4 @@
-# Pusher
+# Rpush-server
 
 [API docs](docs/api/API.md)
 
@@ -76,10 +76,10 @@ Set environments variables for Production
 
 ```ruby
 MAILER_ADDRESS # smtp.sendgrid.net
-MAILER_DOMAIN # pusherrr.com
+MAILER_DOMAIN # rpush-server.com
 MAILER_USER # vasya
 MAILER_PASSWORD # xyz
-MAILER_FROM # from@pusherrr.com
+MAILER_FROM # from@rpush-server.com
 ```
 
 Mailer was tested with [sendgrid](https://app.sendgrid.com/guide/integrate/langs/smtp)

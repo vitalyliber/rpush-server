@@ -99,7 +99,7 @@ class CreateAppForm extends PureComponent {
       <div>
         <div className="form-group row mt-4">
           <div className="col-sm-8">
-            <p className="text-primary">PUSHER.</p>
+            <p className="text-primary">RPush-server.</p>
           </div>
           <div className="col-sm-4">
             <input

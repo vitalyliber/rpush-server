@@ -2,7 +2,7 @@ stages:
   - deploy
 
 variables:
-  APP_NAME: pusher
+  APP_NAME: RPush-server
 
 
 deploy:
