@@ -85,4 +85,41 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_response 200
     assert_equal '{}', body
   end
+
+  test "create push notification to all devices" do
+    assert_equal Rpush::Apns::Notification.count, 0
+    assert_equal Rpush::Gcm::Notification.count, 0
+    create_apns_app
+    create_gcm_app
+    post push_notifications_path,
+         params: {
+             mobile_user: {
+                 external_key: 'LiberVA', # external key is case insensitive
+                 environment: 'development'
+             },
+             message: {
+                 title: 'New guests apply',
+                 message: 'Angela has applied to you event'
+             },
+         },
+         headers: server_access_headers
+    assert_equal Rpush::Apns::Notification.count, 1
+    assert_equal Rpush::Gcm::Notification.count, 1
+    post push_notifications_path,
+         params: {
+             mobile_user: {
+                 environment: 'development'
+             },
+             message: {
+                 title: 'New guests apply',
+                 message: 'Angela has applied to you event'
+             },
+         },
+         headers: server_access_headers
+    assert_response :success
+    assert_equal Rpush::Apns::Notification.count, 2
+    assert_equal Rpush::Gcm::Notification.count, 2
+    assert_response 200
+    assert_equal '{}', body
+  end
 end
