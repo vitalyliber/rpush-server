@@ -11,7 +11,8 @@ class PushNotificationsController < ApplicationController
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
       send_message.call(mobile_user)
     else
-      current_app.mobile_users.find_each do |mobile_user|
+      current_app.mobile_users.where(environment: params.dig(:mobile_user, :environment))
+          .find_each do |mobile_user|
         send_message.call(mobile_user)
       end
     end
