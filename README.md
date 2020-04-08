@@ -3,7 +3,7 @@
 <img src="/logo.jpg" align="right"
      alt="Rpush-server logo by Shen">
 
-A simple push server implementation basend on [**RPush**](https://github.com/rpush/rpush).
+A simple push server implementation based on [**RPush**](https://github.com/rpush/rpush).
 
 * **Simple.** Has an admin panel for managing push notifications credentials, users and push tokens.
 * **Powerfull.** Has all API methods for keeping push tokens and sending messages.
