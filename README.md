@@ -44,8 +44,8 @@ ADMIN_PASSWORD=admin_password
 MobileUser.last.send_pushes(title: 'Hello', message: 'Wow')
 ```
 
-## Configure mailer
-
+<details><summary>Configure mailer</summary>
+     
 _Need for sending notifications about apns certs problems
 like an expiration or a revoke_
 
@@ -67,8 +67,10 @@ You can check how it works in console:
 PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliver_now
 ```
 
-## Run in dev
+</details>
 
+<details><summary>Run in development mode</summary>
+     
 1. Install postgres client tools
     ```
     brew install libpq
@@ -98,6 +100,9 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
     ```
     yarn start
     ```
+    
+</details>
+
 
 # Thanks
 
