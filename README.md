@@ -3,39 +3,13 @@
 <img src="/logo.jpg" align="right"
      alt="Rpush-server logo by Shen">
 
-[API docs](docs/api/API.md)
+A simple push server implementation basend on [**RPush**](https://github.com/rpush/rpush).
 
-## Run in dev
+* **Simple.** Has an admin panel for managing push notifications credentials, users and push tokens.
+* **Powerfull.** Has all API methods for keeping push tokens and sending messages.
+* **No DevOps needed.** Easy deploy to Heroku or Dokku.
 
-1. Install postgres client tools
-    ```
-    brew install libpq
-    ```
-    
-2. Install Yarn
-    ```
-    brew install yarn
-    ```
-
-3. Install Docker by [link](https://docs.docker.com/docker-for-mac/install/)
-
-4. Create db and run migrations
-
-    ```
-    docker-compose up -d
-    rails db:setup
-    ```
-    
-5. Install frontend dependencies
-    ```
-    yarn install
-    ```
-    
-6. Run a Procfile_dev processes
-
-    ```
-    yarn start
-    ```
+Read more about Storeon features in [**our docs**](docs/api/API.md)
     
 ## How to get access token?
 
@@ -92,3 +66,35 @@ You can check how it works in console:
 ```ruby
 PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliver_now
 ```
+
+## Run in dev
+
+1. Install postgres client tools
+    ```
+    brew install libpq
+    ```
+    
+2. Install Yarn
+    ```
+    brew install yarn
+    ```
+
+3. Install Docker by [link](https://docs.docker.com/docker-for-mac/install/)
+
+4. Create db and run migrations
+
+    ```
+    docker-compose up -d
+    rails db:setup
+    ```
+    
+5. Install frontend dependencies
+    ```
+    yarn install
+    ```
+    
+6. Run a Procfile_dev processes
+
+    ```
+    yarn start
+    ```
