@@ -9,7 +9,7 @@ A simple push server implementation based on [**RPush**](https://github.com/rpus
 * **Powerfull.** Has all API methods for keeping push tokens and sending messages.
 * **No DevOps needed.** Easy deploy to Heroku or Dokku.
 
-Read more about Storeon features in [**our docs**](docs/api/API.md)
+Read more about RPush-server features in [**our docs**](docs/api/API.md)
     
 ## How to get access token?
 
