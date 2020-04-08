@@ -98,3 +98,7 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
     ```
     yarn start
     ```
+
+# Thanks
+
+Thank [**Shen**](https://twitter.com/Shen__art) for beautiful logo.
