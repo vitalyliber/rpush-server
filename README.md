@@ -1,5 +1,8 @@
 # Rpush-server
 
+<img src="/logo.jpg" align="right"
+     alt="Rpush-server logo by Shen">
+
 [API docs](docs/api/API.md)
 
 ## Run in dev
