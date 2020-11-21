@@ -1,22 +1,18 @@
-// Run this example by adding <%= javascript_pack_tag 'create_app_form' %> to the head of your layout file,
-// like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page.
+import Head from 'next/head'
 
 import React, { Fragment, PureComponent } from 'react'
 import axios from 'axios'
-import ReactDOM from 'react-dom'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { Collapse, Button } from 'reactstrap'
 import AppsList from '../components/apps_list'
-import csrf_token from '../utils/csrf_token'
 import CustomPushForm from '../components/CustomPushForm'
 
 class CreateAppForm extends PureComponent {
   state = {
     os: 'android',
     apps: [],
-    access_token: localStorage.getItem('access_token'),
+    access_token: process.browser ? localStorage.getItem('access_token') : '',
     isOpen: false,
   }
 
@@ -25,7 +21,6 @@ class CreateAppForm extends PureComponent {
   getHeaders = () => {
     const { access_token } = this.state
     return {
-      'X-CSRF-Token': csrf_token,
       Authorization: `Bearer ${access_token}`,
     }
   }
@@ -55,7 +50,7 @@ class CreateAppForm extends PureComponent {
         console.log(data, status)
         this.getApps()
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
           console.log(error.response)
           return
@@ -83,7 +78,7 @@ class CreateAppForm extends PureComponent {
         console.log(data, status)
         this.setState({ apps: data.apps })
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
           console.log(error.response)
           return
@@ -100,7 +95,11 @@ class CreateAppForm extends PureComponent {
     const { os, access_token, isOpen } = this.state
 
     return (
-      <div>
+      <div className="container">
+        <Head>
+          <title>RPush Server</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         <div className="form-group row mt-4">
           <div className="col-sm-8">
             <p className="text-primary">RPush-server.</p>
@@ -108,7 +107,7 @@ class CreateAppForm extends PureComponent {
           <div className="col-sm-4">
             <input
               value={access_token}
-              onChange={e => {
+              onChange={(e) => {
                 this.setState({ access_token: e.target.value })
                 localStorage.setItem('access_token', e.target.value)
               }}
@@ -137,7 +136,7 @@ class CreateAppForm extends PureComponent {
               <ul className="nav nav-tabs">
                 <li className="nav-item">
                   <a
-                    onClick={event => {
+                    onClick={(event) => {
                       event.preventDefault()
                       this.setState({ os: 'android' })
                     }}
@@ -149,7 +148,7 @@ class CreateAppForm extends PureComponent {
                 </li>
                 <li className="nav-item">
                   <a
-                    onClick={event => {
+                    onClick={(event) => {
                       event.preventDefault()
                       this.setState({ os: 'ios' })
                     }}
@@ -168,7 +167,7 @@ class CreateAppForm extends PureComponent {
                   password: '',
                   auth_key: '',
                 }}
-                validate={values => {
+                validate={(values) => {
                   let errors = {}
                   if (os === 'ios') {
                     if (!values.certificate) {
@@ -207,7 +206,7 @@ class CreateAppForm extends PureComponent {
                       resetForm()
                       this.getApps()
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       if (error.response) {
                         console.log(error.response)
                         setErrors(error.response.data.errors)
@@ -342,9 +341,4 @@ class CreateAppForm extends PureComponent {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <CreateAppForm name="React" />,
-    document.getElementById('create_app_form')
-  )
-})
+export default CreateAppForm

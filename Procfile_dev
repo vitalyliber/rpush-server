@@ -1,4 +1,2 @@
-web: bundle exec puma -C config/puma.rb
+web: yarn --cwd front run dev & bundle exec puma -C config/puma.rb -p 3000 && fg
 rpush: bundle exec rpush start -e $RAILS_ENV -f
-webpacker: ./bin/webpack-dev-server
-log: tail -f log/development.log
