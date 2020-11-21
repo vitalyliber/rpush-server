@@ -4,16 +4,9 @@
     "node": "12.19.0"
   },
   "private": true,
-  "dependencies": {
-    "@babel/preset-react": "^7.0.0",
-    "@rails/webpacker": "4.3.0",
-    "prop-types": "^15.6.2",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "prettier": "2.2.0",
-    "webpack-dev-server": "3.7.1"
+    "prettier": "2.2.0"
   },
   "scripts": {
     "s": "overmind start -f Procfile_dev",
