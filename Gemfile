@@ -73,3 +73,4 @@ gem 'rails_admin'
 
 # Provides a ruby language library for working with email addresses.
 gem 'email_address'
+gem 'prettier'

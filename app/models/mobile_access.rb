@@ -1,4 +1,5 @@
 class MobileAccess < ApplicationRecord
+  enum apns_version: { apns: 0, apnsp8: 1 }
   before_create :generate_server_token
   before_create :generate_client_token
   validates_presence_of :app_name, :email

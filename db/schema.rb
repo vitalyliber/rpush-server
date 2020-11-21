@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_08_100616) do
+ActiveRecord::Schema.define(version: 2020_11_21_140110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_06_08_100616) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.string "client_token"
+    t.integer "apns_version", default: 0
   end
 
   create_table "mobile_devices", force: :cascade do |t|

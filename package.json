@@ -6,7 +6,8 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "prettier": "2.2.0"
+    "@prettier/plugin-ruby": "^0.20.1",
+    "prettier": "^2.2.0"
   },
   "scripts": {
     "s": "overmind start -f Procfile_dev",
