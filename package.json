@@ -18,6 +18,6 @@
   "scripts": {
     "s": "overmind start -f Procfile_dev",
     "build": "cd front && yarn install && yarn build",
-    "deploy": "git push dokku@casply.com:rpush-server master"
+    "d": "git push dokku@casply.com:rpush-server master"
   }
 }
