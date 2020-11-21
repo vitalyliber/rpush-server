@@ -11,9 +11,10 @@ import {
 } from 'reactstrap'
 import { sendPushNotification } from '../api/pushNotifications'
 
-function CustomPushForm({ getHeaders }) {
+function CustomPushForm() {
   const [loading, setLoading] = useState(false)
-  const handleErrors = keys => {
+  const [environment, setEnvironment] = useState('development')
+  const handleErrors = (keys) => {
     const result = dig(errors, ...keys)
     return <FormFeedback>{result && result.message}</FormFeedback>
   }
@@ -24,19 +25,14 @@ function CustomPushForm({ getHeaders }) {
     value: true,
     message: 'Required field',
   }
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     try {
       setLoading(true)
       console.log('onSubmit', data)
-      await Promise.all(
-        ['development', 'production'].map(environment =>
-          sendPushNotification({
-            ...data,
-            environment,
-            headers: getHeaders(),
-          })
-        )
-      )
+      await sendPushNotification({
+        ...data,
+        environment,
+      })
     } catch (e) {
       console.log('onSubmitError')
       alert('Something went wrong.')
@@ -44,6 +40,7 @@ function CustomPushForm({ getHeaders }) {
       setLoading(false)
     }
   }
+  console.log(errors)
   return (
     <div>
       <h4>Push notification form</h4>
@@ -51,7 +48,7 @@ function CustomPushForm({ getHeaders }) {
         If you want to send a message to all users leave the "External Key"
         field blank
       </p>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form invalid={errors} onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
           <Label>Title</Label>
           <Input
@@ -87,6 +84,22 @@ function CustomPushForm({ getHeaders }) {
           {handleErrors(['message'])}
         </FormGroup>
         <FormGroup>
+          <Label>Data</Label>
+          <Input
+            invalid={!!dig(errors, 'data')}
+            type="textarea"
+            placeholder="Data"
+            name="data"
+            innerRef={register({
+              maxLength: {
+                value: 200,
+                message: 'Max length 200',
+              },
+            })}
+          />
+          {handleErrors(['data'])}
+        </FormGroup>
+        <FormGroup>
           <Label>External Key</Label>
           <Input
             invalid={!!dig(errors, 'external_key')}
@@ -107,6 +120,16 @@ function CustomPushForm({ getHeaders }) {
           type="submit"
           value="Send"
         />
+        <Input
+          onChange={(el) => setEnvironment(el.target.value)}
+          type="select"
+          name="select"
+          id="exampleSelect"
+          className="mb-4"
+        >
+          <option>development</option>
+          <option>production</option>
+        </Input>
       </Form>
     </div>
   )

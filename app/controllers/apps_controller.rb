@@ -58,7 +58,7 @@ class AppsController < ApplicationController
       if app.save
         render json: {}, status: 201
       else
-        render json: { errors: app.errors }, status: 400
+        render json: { errors: app.errors.full_messages }, status: 400
       end
     else
       render json: {
