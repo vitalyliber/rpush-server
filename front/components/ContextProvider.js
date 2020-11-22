@@ -8,7 +8,7 @@ function ContextProvider({ children }) {
   useEffect(() => {
     if (process.browser) {
       const token = localStorage.getItem('access_token')
-      if (token.length > 0) {
+      if (token?.length > 0) {
         setAccessToken(localStorage.getItem('access_token'))
       }
     }
