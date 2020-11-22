@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getApps = async ({ os, access_token }) => {
+export const getCredentials = async ({ os, access_token }) => {
   return axios({
     method: 'get',
     url: '/apps',
@@ -10,12 +10,12 @@ export const getApps = async ({ os, access_token }) => {
       Authorization: `Bearer ${access_token}`,
     },
   }).then(({ data, status }) => {
-    console.log('getApps', data)
+    console.log('getCredentials', data)
     return data.apps
   })
 }
 
-export const deleteApp = ({ id, os }) => {
+export const deleteCredential = ({ id, os }) => {
   const access_token = localStorage.getItem('access_token')
   return axios({
     method: 'delete',
@@ -26,11 +26,11 @@ export const deleteApp = ({ id, os }) => {
       Authorization: `Bearer ${access_token}`,
     },
   }).then(({ data }) => {
-    console.log('deleteApp', data)
+    console.log('deleteCredential', data)
   })
 }
 
-export const createApp = async ({ data, os }) => {
+export const createCredential = async ({ data, os }) => {
   const access_token = localStorage.getItem('access_token')
   return axios({
     method: 'post',

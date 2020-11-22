@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useContext } from 'react'
 import moment from 'moment'
 import useCredentials from '../hooks/useCredentials'
-import { deleteApp } from '../api/apps'
+import { deleteCredential } from '../api/credentials'
 import { Context } from './ContextProvider'
 
 const Credential = ({ app: { name, id, updated_at, environment } }) => {
@@ -56,7 +56,7 @@ const Credential = ({ app: { name, id, updated_at, environment } }) => {
               onClick={async (event) => {
                 event.preventDefault()
                 try {
-                  await deleteApp({ id, os })
+                  await deleteCredential({ id, os })
                 } catch (e) {
                   alert(e.message)
                 } finally {

@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import dig from 'object-dig'
 import { useForm } from 'react-hook-form'
 import { Form, FormGroup, Input, FormFeedback } from 'reactstrap'
-import { createApp } from '../api/apps'
+import { createCredential } from '../api/credentials'
 import useCredentials from '../hooks/useCredentials'
 import { Context } from './ContextProvider'
 
@@ -25,7 +25,7 @@ function CredentialsForm() {
     console.log(data)
     try {
       setLoading(true)
-      await createApp({ data, os })
+      await createCredential({ data, os })
     } catch (e) {
       alert(e?.response?.data?.errors?.join(', '))
     } finally {
