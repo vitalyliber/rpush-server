@@ -11,7 +11,7 @@ export const getCredentials = async ({ os, access_token }) => {
     },
   }).then(({ data, status }) => {
     console.log('getCredentials', data)
-    return data.apps
+    return data
   })
 }
 
@@ -40,6 +40,20 @@ export const createCredential = async ({ data, os }) => {
         ...data,
         os,
       },
+    },
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })
+}
+
+export const changeApnsCredential = async ({ apns_version }) => {
+  const access_token = localStorage.getItem('access_token')
+  return axios({
+    method: 'post',
+    url: '/apps/change_apns',
+    data: {
+      apns_version,
     },
     headers: {
       Authorization: `Bearer ${access_token}`,

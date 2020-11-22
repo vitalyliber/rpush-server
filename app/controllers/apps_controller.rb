@@ -8,18 +8,19 @@ class AppsController < ApplicationController
       elsif params[:os] == 'ios'
         if params[:apns_version] === 'apns8'
           Rpush::Apnsp8::App.where(name: current_app.app_name).order(
-              updated_at: :desc
+            updated_at: :desc
           )
         else
           Rpush::Apns::App.where(name: current_app.app_name).order(
-              updated_at: :desc
+            updated_at: :desc
           )
         end
       else
         []
       end
     render json: {
-             apps: apps.as_json(only: %i[id name updated_at environment])
+             apps: apps.as_json(only: %i[id name updated_at environment]),
+             apns_version: current_app.apns_version
            }
   end
 
@@ -85,6 +86,15 @@ class AppsController < ApplicationController
       render json: {}
     else
       render json: { errors: app.errors.full_messages }, status: 400
+    end
+  end
+
+  def change_apns
+    if current_app.update(apns_version: params[:apns_version])
+      render json: {}, status: 200
+    else
+      render json: { errors: change_apns_apps_url.errors.full_messages },
+             status: 400
     end
   end
 

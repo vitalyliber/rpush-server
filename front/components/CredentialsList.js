@@ -17,7 +17,7 @@ const CredentialsList = () => {
 
   return (
     <div className="mt-4">
-      {data.map((el) => (
+      {data.apps.map((el) => (
         <Credential
           key={el.id}
           app={el}

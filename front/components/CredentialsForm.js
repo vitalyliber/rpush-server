@@ -2,13 +2,13 @@ import React, { useState, useContext } from 'react'
 import dig from 'object-dig'
 import { useForm } from 'react-hook-form'
 import { Form, FormGroup, Input, FormFeedback } from 'reactstrap'
-import { createCredential } from '../api/credentials'
+import { changeApnsCredential, createCredential } from '../api/credentials'
 import useCredentials from '../hooks/useCredentials'
 import { Context } from './ContextProvider'
 
 function CredentialsForm() {
   const { os } = useContext(Context)
-  const { mutate } = useCredentials({ os })
+  const { data, mutate } = useCredentials({ os })
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, errors, reset } = useForm({
     mode: 'onBlur',
@@ -26,14 +26,15 @@ function CredentialsForm() {
     try {
       setLoading(true)
       await createCredential({ data, os })
+      reset()
+      mutate()
     } catch (e) {
       alert(e?.response?.data?.errors?.join(', '))
     } finally {
       setLoading(false)
-      reset()
-      mutate()
     }
   }
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormGroup>
@@ -63,50 +64,138 @@ function CredentialsForm() {
         )}
         {os === 'ios' && (
           <>
-            <Input
-              className="mb-2"
-              invalid={!!dig(errors, 'certificate')}
-              type="textarea"
-              rows="6"
-              placeholder="Certificate"
-              name="certificate"
-              innerRef={register({
-                required,
-              })}
-            />
-            <small className="form-text text-muted">
-              Certificate with extension
-              <a
-                target="_blank"
-                href="https://github.com/rpush/rpush/wiki/Generating-Certificates"
-                className="text-info ml-1"
+            {!!data && (
+              <Input
+                onChange={async (el) => {
+                  try {
+                    await changeApnsCredential({
+                      apns_version: el.target.value,
+                    })
+                    mutate()
+                  } catch (e) {
+                    console.log(e)
+                    alert('Something went wrong')
+                  }
+                }}
+                value={data.apns_version}
+                className="mb-4"
+                type="select"
+                name="environment"
               >
-                .pem
-              </a>
-            </small>
-            {handleErrors(['certificate'])}
-            <Input
-              className="mt-4"
-              innerRef={register({
-                required,
-              })}
-              type="select"
-              name="environment"
-            >
-              <option>development</option>
-              <option>production</option>
-            </Input>
-            {handleErrors(['environment'])}
-            <Input
-              className="mb-2 mt-3"
-              invalid={!!dig(errors, 'password')}
-              type="text"
-              rows="6"
-              placeholder="Password"
-              name="password"
-              innerRef={register({})}
-            />
-            {handleErrors(['password'])}
+                <option>apns</option>
+                <option>apnsp8</option>
+              </Input>
+            )}
+            {!!data && data.apns_version === 'apnsp8' && (
+              <>
+                <Input
+                  className="mb-2 mt-3"
+                  invalid={!!dig(errors, 'apn_key')}
+                  type="textarea"
+                  placeholder="Apn Key"
+                  name="apn_key"
+                  rows="6"
+                  innerRef={register({
+                    required,
+                  })}
+                />
+                <small className="form-text text-muted">.p8 key</small>
+                {handleErrors(['apn_key'])}
+                <Input
+                  className="mb-2 mt-3"
+                  invalid={!!dig(errors, 'apn_key_id')}
+                  type="text"
+                  placeholder="Apn Key Id"
+                  name="apn_key_id"
+                  innerRef={register({
+                    required,
+                  })}
+                />
+                <small className="form-text text-muted">
+                  Example: CNX38P272R
+                </small>
+                {handleErrors(['apn_key_id'])}
+                <Input
+                  className="mb-2 mt-3"
+                  invalid={!!dig(errors, 'team_id')}
+                  type="text"
+                  placeholder="Team Id"
+                  name="team_id"
+                  innerRef={register({
+                    required,
+                  })}
+                />
+                <small className="form-text text-muted">
+                  Example: 9P59H549VX
+                </small>
+                {handleErrors(['team_id'])}
+                <Input
+                  className="mb-2 mt-3"
+                  invalid={!!dig(errors, 'bundle_id')}
+                  type="text"
+                  placeholder="Bundle Id"
+                  name="bundle_id"
+                  innerRef={register({
+                    required,
+                  })}
+                />
+                <small className="form-text text-muted">
+                  Example: com.casply.rpush
+                </small>
+                {handleErrors(['bundle_id'])}
+              </>
+            )}
+            {!!data && data.apns_version === 'apns' && (
+              <>
+                <Input
+                  className="mb-2"
+                  invalid={!!dig(errors, 'certificate')}
+                  type="textarea"
+                  rows="6"
+                  placeholder="Certificate"
+                  name="certificate"
+                  innerRef={register({
+                    required,
+                  })}
+                />
+                <small className="form-text text-muted">
+                  Certificate with extension
+                  <a
+                    target="_blank"
+                    href="https://github.com/rpush/rpush/wiki/Generating-Certificates"
+                    className="text-info ml-1"
+                  >
+                    .pem
+                  </a>
+                </small>
+                {handleErrors(['certificate'])}
+                <Input
+                  className="mb-2 mt-3"
+                  invalid={!!dig(errors, 'password')}
+                  type="text"
+                  placeholder="Password"
+                  name="password"
+                  innerRef={register({})}
+                />
+                {handleErrors(['password'])}
+              </>
+            )}
+            {!!data && (
+              <>
+                <Input
+                  className="mt-4"
+                  innerRef={register({
+                    required,
+                  })}
+                  type="select"
+                  name="environment"
+                >
+                  <option>development</option>
+                  <option>production</option>
+                </Input>
+                {handleErrors(['environment'])}
+              </>
+            )}
           </>
         )}
         <input
