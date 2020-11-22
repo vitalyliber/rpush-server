@@ -1,10 +1,12 @@
 require Rails.root.join('lib/rails_admin/config/fields/types/citext')
 
 RailsAdmin.config do |config|
-
   config.authorize_with do
-    authenticate_or_request_with_http_basic('Basic authorization') do |username, password|
-      username == ENV.fetch('ADMIN_USERNAME') {'admin'} && password == ENV.fetch('ADMIN_PASSWORD') {'admin'}
+    authenticate_or_request_with_http_basic(
+      'Basic authorization'
+    ) do |username, password|
+      username == ENV.fetch('ADMIN_USERNAME') { 'admin' } &&
+        password == ENV.fetch('ADMIN_PASSWORD') { 'admin' }
     end
   end
 
@@ -32,20 +34,14 @@ RailsAdmin.config do |config|
   # config.show_gravatar = true
 
   config.actions do
-    dashboard                     # mandatory
-    index                         # mandatory
-    new do
-      except ['MobileUser', 'MobileDevice']
-    end
+    dashboard # mandatory
+    index # mandatory
+    new { except %w[MobileUser MobileDevice] }
     export
     bulk_delete
     show
-    edit do
-      except ['MobileUser', 'MobileDevice']
-    end
-    delete do
-      except ['MobileUser', 'MobileDevice']
-    end
+    edit { except %w[MobileUser MobileDevice] }
+    delete { except %w[MobileUser MobileDevice] }
     show_in_app
 
     ## With an audit adapter, you can add:
@@ -57,19 +53,13 @@ RailsAdmin.config do |config|
     edit do
       field :email
       field :app_name do
-        visible do
-          bindings[:object].id.blank?
-        end
+        visible { bindings[:object].id.blank? }
       end
       field :client_token do
-        visible do
-          bindings[:object].id.present?
-        end
+        visible { bindings[:object].id.present? }
       end
       field :server_token do
-        visible do
-          bindings[:object].id.present?
-        end
+        visible { bindings[:object].id.present? }
       end
     end
     list do
