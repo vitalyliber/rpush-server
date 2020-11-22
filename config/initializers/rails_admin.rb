@@ -1,4 +1,19 @@
 require Rails.root.join('lib/rails_admin/config/fields/types/citext')
+module ActionView
+  module RoutingUrlFor
+    alias_method :_url_for, :url_for
+    def url_for(options = nil)
+      host = 'http://localhost:5000'
+      if Rails.env.production?
+        host = ENV['BASE_HOST']
+      end
+      if options.instance_of? String
+        options.sub! 'http://localhost:3000', host
+      end
+      _url_for(options)
+    end
+  end
+end
 
 RailsAdmin.config do |config|
   config.authorize_with do
