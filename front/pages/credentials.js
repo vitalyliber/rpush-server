@@ -5,7 +5,7 @@ import CredentialsList from '../components/CredentialsList'
 import { Context } from '../components/ContextProvider'
 import Header from "../components/Header";
 
-export default function () {
+export default function Credentials() {
   const { os, setOs } = useContext(Context)
 
   return (

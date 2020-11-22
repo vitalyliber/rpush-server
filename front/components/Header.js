@@ -1,8 +1,9 @@
 import { useContext } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Context } from './ContextProvider'
 
-export default function () {
+export default function Header() {
   const { access_token, setAccessToken } = useContext(Context)
   return (
     <>
@@ -12,7 +13,11 @@ export default function () {
       </Head>
       <div className="form-group row mt-4">
         <div className="col-sm-8">
-          <p className="text-primary">RPush-server.</p>
+          <Link href="/">
+            <a>
+              <p className="text-primary">RPush-server.</p>
+            </a>
+          </Link>
         </div>
         <div className="col-sm-4">
           <input

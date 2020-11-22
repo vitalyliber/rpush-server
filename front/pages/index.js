@@ -1,11 +1,9 @@
-import Head from 'next/head'
 import Link from 'next/link'
 
-import React, { useContext } from 'react'
+import React  from 'react'
 
 import { Button } from 'reactstrap'
 import CustomPushForm from '../components/CustomPushForm'
-import { Context } from '../components/ContextProvider'
 import Header from '../components/Header'
 
 function Home() {

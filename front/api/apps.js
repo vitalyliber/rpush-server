@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-export const getApps = async ({ os }) => {
-  const access_token = localStorage.getItem('access_token')
+export const getApps = async ({ os, access_token }) => {
   return axios({
     method: 'get',
     url: '/apps',

@@ -4,11 +4,11 @@ import { getApps } from '../api/apps'
 import { Context } from '../components/ContextProvider'
 
 const useCredentials = () => {
-  const { os } = useContext(Context)
-  const access_token = process.browser
-    ? localStorage.getItem('access_token')
-    : ''
-  return useSWR(`apps_${os}${access_token}`, () => getApps({ os }))
+  const { os, access_token } = useContext(Context)
+  return useSWR(
+    access_token?.length > 0 ? `apps_${os}${access_token}` : null,
+    () => getApps({ os, access_token })
+  )
 }
 
 export default useCredentials
