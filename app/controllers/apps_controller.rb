@@ -6,7 +6,7 @@ class AppsController < ApplicationController
           updated_at: :desc
         )
       elsif params[:os] == 'ios'
-        if params[:apns_version] === 'apns8'
+        if current_app.apnsp8?
           Rpush::Apnsp8::App.where(name: current_app.app_name).order(
             updated_at: :desc
           )
