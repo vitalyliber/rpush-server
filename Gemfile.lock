@@ -73,7 +73,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.5)
-    connection_pool (2.2.2)
+    connection_pool (2.2.3)
     crass (1.0.4)
     dotenv (0.7.0)
     email_address (0.1.11)
@@ -92,7 +92,7 @@ GEM
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
-    http-2 (0.10.1)
+    http-2 (0.10.2)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     io-like (0.3.0)
@@ -105,7 +105,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
-    jwt (2.2.1)
+    jwt (2.2.2)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -137,9 +137,9 @@ GEM
     msgpack (1.2.4)
     multi_json (1.13.1)
     nested_form (0.3.2)
-    net-http-persistent (3.0.1)
+    net-http-persistent (4.0.0)
       connection_pool (~> 2.2)
-    net-http2 (0.18.2)
+    net-http2 (0.18.3)
       http-2 (~> 0.10.1)
     netaddr (2.0.3)
     nio4r (2.3.1)
@@ -199,12 +199,12 @@ GEM
       ffi (>= 0.5.0, < 2)
     regexp_parser (1.2.0)
     remotipart (1.4.2)
-    rpush (4.1.1)
-      activesupport
+    rpush (5.2.0)
+      activesupport (>= 5.0)
       jwt (>= 1.5.6)
       multi_json (~> 1.0)
       net-http-persistent
-      net-http2 (~> 0.14)
+      net-http2 (~> 0.18, >= 0.18.3)
       railties
       rainbow
       thor (>= 0.18.1, < 2.0)
@@ -278,7 +278,7 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 5.2.3)
   rails_admin
-  rpush
+  rpush (= 5.2.0)
   sass-rails (~> 5.0)
   selenium-webdriver
   spring

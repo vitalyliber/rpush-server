@@ -178,10 +178,6 @@ function CredentialsForm() {
                   innerRef={register({})}
                 />
                 {handleErrors(['password'])}
-              </>
-            )}
-            {!!data && (
-              <>
                 <Input
                   className="mt-4"
                   innerRef={register({

@@ -40,7 +40,7 @@ class AppsController < ApplicationController
           app.apn_key_id = app_params[:apn_key_id]
           app.team_id = app_params[:team_id]
           app.bundle_id = app_params[:bundle_id]
-          app.environment = app_params[:environment]
+          app.environment = 'development'
           app.connections = app_params[:connections] || 1
           app
         else
