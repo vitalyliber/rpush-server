@@ -1,8 +1,5 @@
 {
   "name": "rpush-server",
-  "engines": {
-    "node": "12.19.0"
-  },
   "private": true,
   "dependencies": {},
   "devDependencies": {
