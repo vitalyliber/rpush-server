@@ -8,7 +8,7 @@
     "start": "next start -p 5000"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.2",
     "bootstrap": "^4.4.1",
     "moment": "^2.29.1",
     "next": "10.0.2",
