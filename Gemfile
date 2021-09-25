@@ -63,7 +63,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # The push notification service for Ruby
-gem 'rpush', '5.2.0'
+gem 'rpush', '6.0.0'
 
 #Webpacker makes it easy to use the JavaScript pre-processor and bundler webpack 4.x.x+ to manage application-like JavaScript in Rails.
 # gem 'webpacker', '>= 4.0.x'
