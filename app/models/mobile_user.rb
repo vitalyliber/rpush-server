@@ -12,7 +12,7 @@ class MobileUser < ApplicationRecord
           n = Rpush::Apnsp8::Notification.new
           n.app =
               Rpush::Apnsp8::App.find_by(
-                  name: mobile_access.app_name, environment: 'development'
+                  name: mobile_access.app_name, environment: environment
               )
         else
           n = Rpush::Apns::Notification.new
