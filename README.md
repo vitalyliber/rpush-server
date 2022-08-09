@@ -103,10 +103,10 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
     
 </details>
 
-# Add  backup to local DB
+## Add backup for DB
 
 ```
- docker exec -i [container_name] pg_restore --verbose --clean --no-acl --no-owner -U postgres -d [database_name] < [path_to_backup]
+ docker exec -i rpush-server_db_1 pg_restore --verbose --clean --no-acl --no-owner -U postgres -d rpush_server_dev < [path_to_backup]
 ```
 
 
