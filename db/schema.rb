@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_31_071855) do
+ActiveRecord::Schema.define(version: 2022_08_09_165754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2022_07_31_071855) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "mobile_access_id"
+    t.index ["external_key", "environment", "mobile_access_id"], name: "index_uniq_combination", unique: true
     t.index ["external_key"], name: "index_mobile_users_on_external_key"
     t.index ["mobile_access_id"], name: "index_mobile_users_on_mobile_access_id"
   end
