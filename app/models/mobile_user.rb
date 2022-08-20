@@ -4,9 +4,11 @@ class MobileUser < ApplicationRecord
   validates_uniqueness_of :external_key, scope: %i[environment mobile_access]
   has_many :mobile_devices
   belongs_to :mobile_access
-
+  # a1b59e5fed47773a0749ee6a0d704f4ae5ffbad6bdfc3a29485fc7dc3e25ecf3
   def send_pushes(title: '', message: '', device_type: 'all', data: {})
+
     self.mobile_devices.each do |device|
+
       if device.ios? && %w[all ios].include?(device_type)
         if mobile_access.apnsp8?
           n = Rpush::Apnsp8::Notification.new
@@ -24,7 +26,7 @@ class MobileUser < ApplicationRecord
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
-        n.data = data
+        n.data = JSON.parse(data)
         n.save!
       end
       if device.android? && %w[all android].include?(device_type)
