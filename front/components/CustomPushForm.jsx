@@ -10,10 +10,13 @@ import {
   FormText,
 } from 'reactstrap'
 import { sendPushNotification } from '../api/pushNotifications'
+import dynamic from "next/dynamic";
+const ReactJson = dynamic(import("react-json-view"), {ssr: false});
 
 function CustomPushForm() {
   const [loading, setLoading] = useState(false)
   const [environment, setEnvironment] = useState('development')
+  const [fieldData, setFieldData] = useState({})
   const handleErrors = (keys) => {
     const result = dig(errors, ...keys)
     return <FormFeedback>{result && result.message}</FormFeedback>
@@ -32,6 +35,7 @@ function CustomPushForm() {
       await sendPushNotification({
         ...data,
         environment,
+        fieldData
       })
     } catch (e) {
       console.log('onSubmitError')
@@ -85,17 +89,23 @@ function CustomPushForm() {
         </FormGroup>
         <FormGroup>
           <Label>Data</Label>
-          <Input
-            invalid={!!dig(errors, 'data')}
-            type="textarea"
-            placeholder="Data"
-            name="data"
-            innerRef={register({
-              maxLength: {
-                value: 200,
-                message: 'Max length 200',
-              },
-            })}
+          {/*<Input*/}
+          {/*  invalid={!!dig(errors, 'data')}*/}
+          {/*  type="textarea"*/}
+          {/*  placeholder="Data"*/}
+          {/*  name="data"*/}
+          {/*  innerRef={register({*/}
+          {/*    maxLength: {*/}
+          {/*      value: 200,*/}
+          {/*      message: 'Max length 200',*/}
+          {/*    },*/}
+          {/*  })}*/}
+          {/*/>*/}
+          <ReactJson
+              name={"data"}
+              onEdit={(res) => setFieldData(res.updated_src)}
+              onAdd={(res) => setFieldData(res.updated_src)}
+              onDelete={(res) => setFieldData(res.updated_src)}
           />
           {handleErrors(['data'])}
         </FormGroup>
