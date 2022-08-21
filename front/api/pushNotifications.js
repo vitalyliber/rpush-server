@@ -6,6 +6,7 @@ export const sendPushNotification = ({
   message,
   environment,
   fieldData,
+  deviceType,
   headers,
 }) => {
   const access_token = localStorage.getItem('access_token')
@@ -16,7 +17,8 @@ export const sendPushNotification = ({
       message: {
         title,
         message,
-        data: JSON.stringify(fieldData)
+        data: JSON.stringify(fieldData),
+        device_type: deviceType
       },
       mobile_user: {
         external_key,

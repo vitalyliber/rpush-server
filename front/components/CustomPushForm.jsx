@@ -17,6 +17,7 @@ function CustomPushForm() {
   const [loading, setLoading] = useState(false)
   const [environment, setEnvironment] = useState('development')
   const [fieldData, setFieldData] = useState({})
+  const [deviceType, setDeviceType] = useState("all");
   const handleErrors = (keys) => {
     const result = dig(errors, ...keys)
     return <FormFeedback>{result && result.message}</FormFeedback>
@@ -35,7 +36,8 @@ function CustomPushForm() {
       await sendPushNotification({
         ...data,
         environment,
-        fieldData
+        fieldData,
+        deviceType
       })
     } catch (e) {
       console.log('onSubmitError')
@@ -89,18 +91,6 @@ function CustomPushForm() {
         </FormGroup>
         <FormGroup>
           <Label>Data</Label>
-          {/*<Input*/}
-          {/*  invalid={!!dig(errors, 'data')}*/}
-          {/*  type="textarea"*/}
-          {/*  placeholder="Data"*/}
-          {/*  name="data"*/}
-          {/*  innerRef={register({*/}
-          {/*    maxLength: {*/}
-          {/*      value: 200,*/}
-          {/*      message: 'Max length 200',*/}
-          {/*    },*/}
-          {/*  })}*/}
-          {/*/>*/}
           <ReactJson
               name={"data"}
               onEdit={(res) => setFieldData(res.updated_src)}
@@ -123,6 +113,19 @@ function CustomPushForm() {
             It can be some uniq user server identifier for a user like email or
             database ID.
           </FormText>
+        </FormGroup>
+        <FormGroup>
+          <Label>Devise type</Label>
+          <Input
+              type={"select"}
+              className="mb-4"
+              name={"device_type"}
+              onChange={(e) => setDeviceType(e.target.value)}
+          >
+            <option>all</option>
+            <option>ios</option>
+            <option>android</option>
+          </Input>
         </FormGroup>
         <input
           disabled={loading}

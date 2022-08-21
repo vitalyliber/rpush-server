@@ -4,7 +4,7 @@ class PushNotificationsController < ApplicationController
       mobile_user.send_pushes(
         title: message_params[:title],
         message: message_params[:message],
-        device_type: params[:device_type] || 'all',
+        device_type: params[:device_type]  || message_params[:device_type] || 'all',
         data: JSON.parse(message_params[:data])
       )
     end
@@ -23,7 +23,7 @@ class PushNotificationsController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:title, :message, :data)
+    params.require(:message).permit(:title, :message, :data, :device_type)
   end
 
   def mobile_users_params

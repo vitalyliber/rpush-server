@@ -4,9 +4,8 @@ class MobileUser < ApplicationRecord
   validates_uniqueness_of :external_key, scope: %i[environment mobile_access]
   has_many :mobile_devices
   belongs_to :mobile_access
-  # 2b9447dba14f02bb6932fe104368a66a7eebf7451a2d6f2fb64bd2bc0d1acfb6
-  # 379154
-  def send_pushes(title: '', message: '', device_type: 'all', data: {})
+
+  def send_pushes(title: '', message: '', device_type: '', data: {})
       self.mobile_devices.each do |device|
 
       if device.ios? && %w[all ios].include?(device_type)
