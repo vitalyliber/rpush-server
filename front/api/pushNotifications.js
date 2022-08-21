@@ -14,11 +14,11 @@ export const sendPushNotification = ({
     method: 'post',
     url: '/push_notifications',
     data: {
+      device_type: deviceType,
       message: {
         title,
         message,
         data: JSON.stringify(fieldData),
-        device_type: deviceType
       },
       mobile_user: {
         external_key,

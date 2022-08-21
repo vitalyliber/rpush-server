@@ -12,12 +12,19 @@ import {
 import { sendPushNotification } from '../api/pushNotifications'
 import dynamic from "next/dynamic";
 const ReactJson = dynamic(import("react-json-view"), {ssr: false});
+import { useAtom} from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const test = atomWithStorage("test", false);
 
 function CustomPushForm() {
   const [loading, setLoading] = useState(false)
   const [environment, setEnvironment] = useState('development')
   const [fieldData, setFieldData] = useState({})
   const [deviceType, setDeviceType] = useState("all");
+  const [testField, setTestField] = useAtom(test);
+
+  console.log(testField)
   const handleErrors = (keys) => {
     const result = dig(errors, ...keys)
     return <FormFeedback>{result && result.message}</FormFeedback>
@@ -62,6 +69,8 @@ function CustomPushForm() {
             type="text"
             placeholder="Title"
             name="title"
+            value={testField}
+            onChange={(e) => setTestField(e.target.value)}
             innerRef={register({
               required,
               maxLength: {

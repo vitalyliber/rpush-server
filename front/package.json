@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "bootstrap": "^4.4.1",
+    "jotai": "^1.8.0",
     "moment": "^2.29.1",
     "next": "10.0.2",
     "object-dig": "^0.1.3",
