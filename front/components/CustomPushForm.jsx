@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import dig from 'object-dig'
 import { useForm } from 'react-hook-form'
 import {
@@ -12,12 +12,29 @@ import {
 import { sendPushNotification } from '../api/pushNotifications'
 import dynamic from "next/dynamic";
 const ReactJson = dynamic(import("react-json-view"), {ssr: false});
+import createPersistedState from "use-persisted-state";
 
 function CustomPushForm() {
-  const [loading, setLoading] = useState(false)
-  const [environment, setEnvironment] = useState('development')
-  const [fieldData, setFieldData] = useState({})
-  const [deviceType, setDeviceType] = useState("all");
+  const storageDeviceType = createPersistedState("devise_type");
+  const storageFieldData = createPersistedState("field_data");
+  const storageEnvironment = createPersistedState("environment");
+  const storageExternalKey = createPersistedState("external_key");
+  const storageTitle = createPersistedState("title");
+  const storageMessage = createPersistedState("message");
+
+  const [loading, setLoading] = useState(false);
+  const [environment, setEnvironment] = storageEnvironment('development');
+  const [fieldData, setFieldData] = storageFieldData({});
+  const [deviceType, setDeviceType] = storageDeviceType("all");
+  const [externalKey, setExternalKey] = storageExternalKey("");
+  const [title, setTitle] = storageTitle("");
+  const [message, setMessage] = storageMessage("");
+
+  const [trigger, setTrigger] = useState(false);
+
+  useEffect(() => {
+    setTrigger(!trigger)
+  }, [deviceType])
 
   const handleErrors = (keys) => {
     const result = dig(errors, ...keys)
@@ -33,7 +50,7 @@ function CustomPushForm() {
   const onSubmit = async (data) => {
     try {
       setLoading(true)
-      console.log('onSubmit', data)
+      console.log('onSubmit', data, deviceType, environment, fieldData )
       await sendPushNotification({
         ...data,
         environment,
@@ -70,6 +87,8 @@ function CustomPushForm() {
                 message: 'Max length 30',
               },
             })}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           {handleErrors(['title'])}
         </FormGroup>
@@ -87,6 +106,8 @@ function CustomPushForm() {
                 message: 'Max length 120',
               },
             })}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
           {handleErrors(['message'])}
         </FormGroup>
@@ -94,6 +115,7 @@ function CustomPushForm() {
           <Label>Data</Label>
           <ReactJson
               name={"data"}
+              src={fieldData}
               onEdit={(res) => setFieldData(res.updated_src)}
               onAdd={(res) => setFieldData(res.updated_src)}
               onDelete={(res) => setFieldData(res.updated_src)}
@@ -108,6 +130,8 @@ function CustomPushForm() {
             placeholder="External Key"
             name="external_key"
             innerRef={register({})}
+            value={externalKey}
+            onChange={(e) => setExternalKey(e.target.value)}
           />
           {handleErrors(['external_key'])}
           <FormText>
@@ -121,6 +145,7 @@ function CustomPushForm() {
               type={"select"}
               className="mb-4"
               name={"device_type"}
+              value={deviceType}
               onChange={(e) => setDeviceType(e.target.value)}
           >
             <option>all</option>
@@ -136,6 +161,7 @@ function CustomPushForm() {
         />
         <Input
           onChange={(el) => setEnvironment(el.target.value)}
+          value={environment}
           type="select"
           name="select"
           id="exampleSelect"
