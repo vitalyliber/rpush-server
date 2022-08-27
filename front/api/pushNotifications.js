@@ -18,7 +18,7 @@ export const sendPushNotification = ({
       message: {
         title,
         message,
-        data: JSON.stringify(fieldData),
+        data: fieldData,
       },
       mobile_user: {
         external_key,

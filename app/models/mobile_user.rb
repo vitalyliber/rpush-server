@@ -25,14 +25,14 @@ class MobileUser < ApplicationRecord
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
-        n.data = data
+        n.data = data.as_json
         n.save!
       end
       if device.android? && %w[all android].include?(device_type)
         n = Rpush::Gcm::Notification.new
         n.app = Rpush::Gcm::App.find_by_name(mobile_access.app_name)
         n.registration_ids = [device.device_token]
-        n.data = { body: message, title: title, data: data }
+        n.data = { body: message, title: title, data: data.as_json }
         n.priority = 'high' # Optional, can be either 'normal' or 'high'
         n.content_available = true # Optional
         # Optional notification payload. See the reference below for more keys you can use!
