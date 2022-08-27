@@ -9,6 +9,6 @@
   "scripts": {
     "s": "overmind start -f Procfile_dev",
     "build": "cd front && yarn install && yarn build",
-    "d": "git push dokku@gym-server.casply.com:rpush-server master"
+    "d": "git push dokku@gym-server.casply.com:rpush-server HEAD:master -f"
   }
 }
