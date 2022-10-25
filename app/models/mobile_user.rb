@@ -32,7 +32,7 @@ class MobileUser < ApplicationRecord
         n = Rpush::Gcm::Notification.new
         n.app = Rpush::Gcm::App.find_by_name(mobile_access.app_name)
         n.registration_ids = [device.device_token]
-        n.data = { body: message, title: title, data: data.as_json, message: message, priority: "max"}
+        n.data = { body: message, title: title, data: data.as_json, message: message, priority: "high", icon: 'ic_notification'}
         n.priority = 'high' # Optional, can be either 'normal' or 'high'
         n.content_available = true # Optional
         # Optional notification payload. See the reference below for more keys you can use!
