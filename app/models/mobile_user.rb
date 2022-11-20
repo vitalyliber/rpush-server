@@ -35,8 +35,7 @@ class MobileUser < ApplicationRecord
         n.data = { body: message,
                    title: title,
                    data: data.as_json,
-                   message: message,
-                   "content-available": 1
+                   message: message
                   }
         n.priority = 'high' # Optional, can be either 'normal' or 'high'
         n.content_available = true # Optional
