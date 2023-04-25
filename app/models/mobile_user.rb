@@ -41,7 +41,9 @@ class MobileUser < ApplicationRecord
         n.content_available = true # Optional
         # Optional notification payload. See the reference below for more keys you can use!
         n.notification = {
-          body: message, title: title, icon: 'ic_notification'
+          body: message, title: title, icon: 'ic_notification',
+          channel_id: "restbrunch",
+          android_channel_id: "restbrunch"
         }
         n.save
       end
