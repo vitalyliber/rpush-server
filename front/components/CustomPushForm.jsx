@@ -17,6 +17,7 @@ import createPersistedState from "use-persisted-state";
 function CustomPushForm() {
   const storageDeviceType = createPersistedState("devise_type");
   const storageFieldData = createPersistedState("field_data");
+  const storageDataNotification = createPersistedState("data_notification");
   const storageEnvironment = createPersistedState("environment");
   const storageExternalKey = createPersistedState("external_key");
   const storageTitle = createPersistedState("title");
@@ -25,6 +26,7 @@ function CustomPushForm() {
   const [loading, setLoading] = useState(false);
   const [environment, setEnvironment] = storageEnvironment('development');
   const [fieldData, setFieldData] = storageFieldData({});
+  const [dataNotification, setDataNotification] = storageDataNotification({})
   const [deviceType, setDeviceType] = storageDeviceType("all");
   const [externalKey, setExternalKey] = storageExternalKey("");
   const [title, setTitle] = storageTitle("");
@@ -50,12 +52,13 @@ function CustomPushForm() {
   const onSubmit = async (data) => {
     try {
       setLoading(true)
-      console.log('onSubmit', data, deviceType, environment, fieldData )
+      console.log('onSubmit', data, deviceType, environment, fieldData, dataNotification )
       await sendPushNotification({
         ...data,
         environment,
         fieldData,
-        deviceType
+        deviceType,
+        dataNotification
       })
     } catch (e) {
       console.log('onSubmitError')
@@ -121,6 +124,17 @@ function CustomPushForm() {
               onDelete={(res) => setFieldData(res.updated_src)}
           />
           {handleErrors(['data'])}
+        </FormGroup>
+        <FormGroup>
+          <Label>Data notification</Label>
+          <ReactJson
+            name={"dataNotification"}
+            src={dataNotification}
+            onEdit={(res) => setDataNotification(res.updated_src)}
+            onAdd={(res) => setDataNotification(res.updated_src)}
+            onDelete={(res) => setDataNotification(res.updated_src)}
+          />
+          {handleErrors(['dataNotification'])}
         </FormGroup>
         <FormGroup>
           <Label>External Key</Label>
