@@ -13,6 +13,7 @@ import { sendPushNotification } from '../api/pushNotifications'
 import dynamic from "next/dynamic";
 const ReactJson = dynamic(import("react-json-view"), {ssr: false});
 import createPersistedState from "use-persisted-state";
+import Link from "next/link";
 
 function CustomPushForm() {
   const storageDeviceType = createPersistedState("devise_type");
@@ -125,17 +126,36 @@ function CustomPushForm() {
           />
           {handleErrors(['data'])}
         </FormGroup>
-        <FormGroup>
-          <Label>Data notification</Label>
-          <ReactJson
-            name={"dataNotification"}
-            src={dataNotification}
-            onEdit={(res) => setDataNotification(res.updated_src)}
-            onAdd={(res) => setDataNotification(res.updated_src)}
-            onDelete={(res) => setDataNotification(res.updated_src)}
-          />
-          {handleErrors(['dataNotification'])}
-        </FormGroup>
+        {
+          (deviceType === "all" || deviceType === "android") && (
+            <FormGroup>
+              <Label>Data notification</Label>
+              <ReactJson
+                name={"dataNotification"}
+                src={dataNotification}
+                onEdit={(res) => setDataNotification(res.updated_src)}
+                onAdd={(res) => setDataNotification(res.updated_src)}
+                onDelete={(res) => setDataNotification(res.updated_src)}
+              />
+              {handleErrors(['dataNotification'])}
+              <FormText>The field needs to setup channel_id and android_channel_id (links
+                <Link
+                  href={"https://stackoverflow.com/questions/45937291/how-to-specify-android-notification-channel-for-fcm-push-messages-in-android-8"}
+                  target={"_blank"}
+                >
+                  {" stackowerflow "}
+                </Link>
+                and
+                <Link
+                  href={"https://developer.android.com/develop/ui/views/notifications#ManageChannels"}
+                  target={"_blank"}
+                >
+                  {" docs"}
+                </Link>)
+              </FormText>
+            </FormGroup>
+          )
+        }
         <FormGroup>
           <Label>External Key</Label>
           <Input

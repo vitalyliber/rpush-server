@@ -30,9 +30,6 @@ class PushNotificationsController < ApplicationController
     params[:message]
   end
 
-
-
-
   def mobile_users_params
     params.require(:mobile_user).permit(:external_key, :environment)
       .try { |hash| hash.merge(mobile_access: current_app) }

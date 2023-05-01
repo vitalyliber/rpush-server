@@ -26,7 +26,7 @@ class MobileUser < ApplicationRecord
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
-        n.data = data.as_json
+        n.data = JSON.parse(data)
         n.save!
       end
       if device.android? && %w[all android].include?(device_type)
