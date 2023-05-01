@@ -7,7 +7,7 @@ export const sendPushNotification = ({
   environment,
   fieldData,
   deviceType,
-  headers,
+  dataNotification
 }) => {
   const access_token = localStorage.getItem('access_token')
   return axios({
@@ -19,6 +19,7 @@ export const sendPushNotification = ({
         title,
         message,
         data: fieldData,
+        data_notification: dataNotification,
       },
       mobile_user: {
         external_key,

@@ -5,7 +5,8 @@ class MobileUser < ApplicationRecord
   has_many :mobile_devices
   belongs_to :mobile_access
 
-  def send_pushes(title: '', message: '', device_type: '', data: {})
+  def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {})
+
       self.mobile_devices.each do |device|
 
       if device.ios? && %w[all ios].include?(device_type)
@@ -25,7 +26,7 @@ class MobileUser < ApplicationRecord
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
-        n.data = data.as_json
+        n.data = JSON.parse(data)
         n.save!
       end
       if device.android? && %w[all android].include?(device_type)
@@ -34,17 +35,22 @@ class MobileUser < ApplicationRecord
         n.registration_ids = [device.device_token]
         n.data = { body: message,
                    title: title,
-                   data: data.as_json,
+                   data: JSON.parse(data),
                    message: message
                   }
         n.priority = 'high' # Optional, can be either 'normal' or 'high'
         n.content_available = true # Optional
         # Optional notification payload. See the reference below for more keys you can use!
-        n.notification = {
-          body: message, title: title, icon: 'ic_notification',
-          channel_id: "restbrunch",
-          android_channel_id: "restbrunch"
+
+        notification = {
+          body: message,
+          title: title,
+          icon: 'ic_notification',
         }
+
+        notification.merge!(JSON.parse(data_notification))
+
+        n.notification = notification
         n.save
       end
     end

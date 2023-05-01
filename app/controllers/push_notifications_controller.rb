@@ -5,7 +5,8 @@ class PushNotificationsController < ApplicationController
         title: message_params[:title],
         message: message_params[:message],
         device_type: params[:device_type] || 'all',
-        data: message_params[:data],
+        data: message_params[:data].to_json,
+        data_notification: message_params[:data_notification].to_json
       )
     end
     if params.dig(:mobile_user, :external_key).present?
@@ -28,9 +29,6 @@ class PushNotificationsController < ApplicationController
   def message_params
     params[:message]
   end
-
-
-
 
   def mobile_users_params
     params.require(:mobile_user).permit(:external_key, :environment)

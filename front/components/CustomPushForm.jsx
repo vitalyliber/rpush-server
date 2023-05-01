@@ -13,10 +13,12 @@ import { sendPushNotification } from '../api/pushNotifications'
 import dynamic from "next/dynamic";
 const ReactJson = dynamic(import("react-json-view"), {ssr: false});
 import createPersistedState from "use-persisted-state";
+import Link from "next/link";
 
 function CustomPushForm() {
   const storageDeviceType = createPersistedState("devise_type");
   const storageFieldData = createPersistedState("field_data");
+  const storageDataNotification = createPersistedState("data_notification");
   const storageEnvironment = createPersistedState("environment");
   const storageExternalKey = createPersistedState("external_key");
   const storageTitle = createPersistedState("title");
@@ -25,6 +27,7 @@ function CustomPushForm() {
   const [loading, setLoading] = useState(false);
   const [environment, setEnvironment] = storageEnvironment('development');
   const [fieldData, setFieldData] = storageFieldData({});
+  const [dataNotification, setDataNotification] = storageDataNotification({})
   const [deviceType, setDeviceType] = storageDeviceType("all");
   const [externalKey, setExternalKey] = storageExternalKey("");
   const [title, setTitle] = storageTitle("");
@@ -50,12 +53,13 @@ function CustomPushForm() {
   const onSubmit = async (data) => {
     try {
       setLoading(true)
-      console.log('onSubmit', data, deviceType, environment, fieldData )
+      console.log('onSubmit', data, deviceType, environment, fieldData, dataNotification )
       await sendPushNotification({
         ...data,
         environment,
         fieldData,
-        deviceType
+        deviceType,
+        dataNotification
       })
     } catch (e) {
       console.log('onSubmitError')
@@ -122,6 +126,36 @@ function CustomPushForm() {
           />
           {handleErrors(['data'])}
         </FormGroup>
+        {
+          (deviceType === "all" || deviceType === "android") && (
+            <FormGroup>
+              <Label>Data notification</Label>
+              <ReactJson
+                name={"dataNotification"}
+                src={dataNotification}
+                onEdit={(res) => setDataNotification(res.updated_src)}
+                onAdd={(res) => setDataNotification(res.updated_src)}
+                onDelete={(res) => setDataNotification(res.updated_src)}
+              />
+              {handleErrors(['dataNotification'])}
+              <FormText>The field needs to setup channel_id and android_channel_id (links
+                <Link
+                  href={"https://stackoverflow.com/questions/45937291/how-to-specify-android-notification-channel-for-fcm-push-messages-in-android-8"}
+                  target={"_blank"}
+                >
+                  {" stackowerflow "}
+                </Link>
+                and
+                <Link
+                  href={"https://developer.android.com/develop/ui/views/notifications#ManageChannels"}
+                  target={"_blank"}
+                >
+                  {" docs"}
+                </Link>)
+              </FormText>
+            </FormGroup>
+          )
+        }
         <FormGroup>
           <Label>External Key</Label>
           <Input
