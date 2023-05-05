@@ -1,3 +1,4 @@
+
 # Rpush-server
 
 <img src="/logo.jpg" align="right"
@@ -71,34 +72,25 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
 
 <details><summary>Run in development mode</summary>
      
-1. Install postgres client tools
+1. Install dependencies
     ```
     brew install libpq
-    ```
-    
-2. Install Yarn
-    ```
-    brew install yarn
+    brew install postgresql@14
+    brew install overmind
+    npm install --global yarn
+    yarn install
     ```
 
-3. Install Docker by [link](https://docs.docker.com/docker-for-mac/install/)
-
-4. Create db and run migrations
+2. Create db and run migrations
 
     ```
-    docker-compose up -d
     rails db:setup
     ```
     
-5. Install frontend dependencies
-    ```
-    yarn install
-    ```
-    
-6. Run a Procfile_dev processes
+3Run a Procfile_dev processes
 
     ```
-    yarn start
+    yarn s
     ```
     
 </details>
@@ -106,10 +98,5 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
 ## Add backup for DB
 
 ```
- docker exec -i rpush-server_db_1 pg_restore --verbose --clean --no-acl --no-owner -U postgres -d rpush_server_dev < [path_to_backup]
+ pg_restore --verbose --clean --no-acl --no-owner -U postgres -d rpush_server_dev < [path_to_backup]
 ```
-
-
-# Thanks
-
-Thank [**Shen**](https://twitter.com/Shen__art) for beautiful logo.

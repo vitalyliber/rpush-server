@@ -14,9 +14,7 @@ export default function Header() {
       <div className="form-group row mt-4">
         <div className="col-sm-8">
           <Link href="/">
-            <a>
-              <p className="text-primary">RPush-server.</p>
-            </a>
+            <p className="text-primary">RPush-server.</p>
           </Link>
         </div>
         <div className="col-sm-4">
