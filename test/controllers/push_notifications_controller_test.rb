@@ -65,15 +65,25 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
            mobile_user: { external_key: 'LiberVA', environment: 'development' },
            message: {
              title: 'New guests apply',
-             message: 'Angela has applied to you event'
+             message: 'Angela has applied to you event',
+             data: {
+               data_param: 'value'
+             },
+             data_notification: {
+               data_notification_param: 'value'
+             }
            },
-           device_type: 'android'
+           device_type: 'android',
          },
          headers: server_access_headers
     assert_equal Rpush::Apns::Notification.count, 0
     assert_equal Rpush::Gcm::Notification.count, 1
     assert_response 200
     assert_equal '{}', body
+    # Verify that data parameters are successfully merged
+    lastNotification = Rpush::Gcm::Notification.last
+    assert lastNotification.notification['data_notification_param']
+    assert lastNotification.data.dig('data', 'data_param')
   end
 
   test 'create push notification to ios apns' do
