@@ -3,8 +3,11 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "@prettier/plugin-ruby": "^0.20.1",
-    "prettier": "^2.2.0"
+    "@prettier/plugin-ruby": "^3.2.2",
+    "prettier": "^2.8.8"
+  },
+  "engines": {
+    "node": "18.16.0"
   },
   "scripts": {
     "s": "overmind start -f Procfile_dev",

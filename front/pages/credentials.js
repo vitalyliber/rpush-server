@@ -1,9 +1,8 @@
 import React, { useContext } from 'react'
-import Link from 'next/link'
 import CredentialsForm from '../components/CredentialsForm'
 import CredentialsList from '../components/CredentialsList'
 import { Context } from '../components/ContextProvider'
-import Header from "../components/Header";
+import Header from '../components/Header'
 
 export default function Credentials() {
   const { os, setOs } = useContext(Context)

@@ -1,10 +1,15 @@
 import Link from 'next/link'
 
-import React  from 'react'
+import React from 'react'
+import dynamic from 'next/dynamic'
 
 import { Button } from 'reactstrap'
-import CustomPushForm from '../components/CustomPushForm'
 import Header from '../components/Header'
+// Avoid the client rendering warning. See details by the link below.
+// https://stackoverflow.com/questions/66374123/warning-text-content-did-not-match-server-im-out-client-im-in-div
+const CustomPushForm = dynamic(() => import('../components/CustomPushForm'), {
+  ssr: false,
+})
 
 function Home() {
   return (
