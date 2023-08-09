@@ -14,12 +14,7 @@ Read more about RPush-server features in [**our docs**](docs/api/API.md)
 
 The RPush server admin panel is accessible by the [link](http://localhost:3000/admin).
 
-Configure environment variables to protect the admin panel:
-
-```console
-ADMIN_USERNAME=admin_username
-ADMIN_PASSWORD=admin_password
-```
+Default credentials: admin & admin
 
 ## Run the RPush server in development mode.
      
