@@ -10,8 +10,6 @@ A simple push server implementation based on [**RPush**](https://github.com/rpus
 * **Powerful.** Has all API methods for keeping push tokens and sending messages.
 * **No DevOps needed.** Easy deploy to Heroku or Dokku.
 
-Read more about RPush-server features in [**our docs**](docs/api/API.md)
-
 The RPush server admin panel is accessible by the [link](http://localhost:3000/admin).
 
 Default credentials: admin & admin
@@ -45,7 +43,9 @@ Generate mobile_token using the admin page:
 
 ![Create mobile device](/docs/create_mobile_device.png)
 
-Fill credentials on the main page (includes instructions for APNS and Firebase)
+Open the [app dashboard](http://localhost:5001/admin) and fill in credentials for APNS and Firebase.
+
+![Credentials page](/docs/credentials_page.png)
 
 ## Endpoints
 
@@ -55,7 +55,7 @@ Fill credentials on the main page (includes instructions for APNS and Firebase)
 
 ### Create mobile device
 
-_Run this method every time after start a mobile application_
+_Run this method every time after starting a mobile application._
 
 POST `/mobile_devices`
 Params:
@@ -88,7 +88,7 @@ Response status: `200`
 
 ### Remove mobile device
 
-_Run this method through user logout_
+_Run this method when the user logout._
 
 DELETE `/mobile_device/:push_token`
 
@@ -100,8 +100,6 @@ Response:
 Response status: `200`
 
 ### Create push notifications
-
-_(for every user devices)_
 
 _Run this method on the server side_
 
