@@ -14,7 +14,7 @@ The RPush server admin panel is accessible by the [link](http://localhost:3000/a
 
 Default credentials: admin & admin
 
-## Run the RPush server in development mode.
+## Run the RPush server in development mode
      
 1. Install dependencies
     ```console
@@ -133,7 +133,7 @@ Response:
 ```
 Response status: `200`
 
-## Restore production backup for local development purposes.
+## Restore production backup for local development purposes
 
 ```console
  pg_restore --verbose --clean --no-acl --no-owner -U postgres -d rpush_server_dev < [path_to_backup]
