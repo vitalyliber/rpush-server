@@ -1,79 +1,23 @@
 
 # Rpush-server
 
-<img src="/logo.jpg" align="right"
+<img src="/docs/logo.jpg" align="right"
      alt="Rpush-server logo by Shen">
 
 A simple push server implementation based on [**RPush**](https://github.com/rpush/rpush).
 
 * **Simple.** Has an admin panel for managing push notifications credentials, users and push tokens.
-* **Powerfull.** Has all API methods for keeping push tokens and sending messages.
+* **Powerful.** Has all API methods for keeping push tokens and sending messages.
 * **No DevOps needed.** Easy deploy to Heroku or Dokku.
 
-Read more about RPush-server features in [**our docs**](docs/api/API.md)
-    
-## How to get access token?
+The RPush server admin panel is accessible by the [link](http://localhost:3000/admin).
 
-1. Open admin panel `/admin`
+Default credentials: admin & admin
 
-2. Sign in via credentials admin:admin
-
-3. Create new `MobileAccess`
-
-4. Copy `client_secret` and `mobile_secret`
-
-Dont't forget configure environment variables in production:
-
-```bash
-ADMIN_USERNAME=admin_username
-ADMIN_PASSWORD=admin_password
-```
-
-## How to send pushes via web panel?
-
-1. Open root of site
-
-2. Paste `server token`
-
-3. Paste `external key` 
-
-4. Submit `send the test push`
-
-## How to send pushes from console?
-
-```ruby
-MobileUser.last.send_pushes(title: 'Hello', message: 'Wow')
-```
-
-<details><summary>Configure mailer</summary>
-     
-_Need for sending notifications about apns certs problems
-like an expiration or a revoke_
-
-Set environments variables for Production
-
-```ruby
-MAILER_ADDRESS # smtp.sendgrid.net
-MAILER_DOMAIN # rpush-server.com
-MAILER_USER # vasya
-MAILER_PASSWORD # xyz
-MAILER_FROM # from@rpush-server.com
-```
-
-Mailer was tested with [sendgrid](https://app.sendgrid.com/guide/integrate/langs/smtp)
-
-You can check how it works in console:
-
-```ruby
-PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliver_now
-```
-
-</details>
-
-<details><summary>Run in development mode</summary>
+## Run the RPush server in development mode
      
 1. Install dependencies
-    ```
+    ```console
     brew install libpq
     brew install postgresql@14
     brew install overmind
@@ -83,20 +27,114 @@ PusherMailer.ssl_will_expire('your_email@gmail.com', 'app_name', Time.now).deliv
 
 2. Create db and run migrations
 
-    ```
+    ```console
     rails db:setup
     ```
     
-3Run a Procfile_dev processes
+3. Run a Procfile_dev processes
 
-    ```
+    ```console
     yarn s
     ```
-    
-</details>
 
-## Add backup for DB
+## Auth
 
+Generate mobile_token using the admin page:
+
+![Create mobile device](/docs/create_mobile_device.png)
+
+Open the [app dashboard](http://localhost:5001/admin) and fill in credentials for APNS and Firebase.
+
+![Credentials page](/docs/credentials_page.png)
+
+## Endpoints
+
+* [POST /mobile_devices](#create-mobile-device)
+* [DELETE /mobile_device/:push_token](#remove-mobile-device)
+* [POST /push_notifications](#create-push-notifications)
+
+### Create mobile device
+
+_Run this method every time after starting a mobile application._
+
+POST `/mobile_devices`
+Params:
+
+```json5
+{
+    "mobile_device": {
+        "device_token": "mobile_device_push_token",
+        "device_type": "ios" // ios/android
+    },
+    "mobile_user": {
+        "external_key": 123, // server user identifier
+        "environment": "development" // development/production
+    }
+}
 ```
+
+Headers:
+
+```json5
+{ Authorization: "Bearer client_token" }
+```
+
+Response:
+
+```json5
+{}
+```
+Response status: `200`
+
+### Remove mobile device
+
+_Run this method when the user logout._
+
+DELETE `/mobile_device/:push_token`
+
+Response:
+
+```json5
+{}
+```
+Response status: `200`
+
+### Create push notifications
+
+_Run this method on the server side_
+
+POST `/push_notifications`
+Params:
+
+```json5
+{
+    "message": {
+        "title": "New message",
+        "message": "Hello Mark"
+    },
+    "mobile_user": {
+        "external_key": 123, // server user identifier
+        "environment": "development" // development/production
+    },
+    device_type: 'ios' // ios/android/all
+}
+```
+
+Headers:
+
+```json5
+{ Authorization: "Bearer server_token" }
+```
+
+Response:
+
+```json5
+{}
+```
+Response status: `200`
+
+## Restore production backup for local development purposes
+
+```console
  pg_restore --verbose --clean --no-acl --no-owner -U postgres -d rpush_server_dev < [path_to_backup]
 ```
