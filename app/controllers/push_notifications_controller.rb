@@ -12,9 +12,7 @@ class PushNotificationsController < ApplicationController
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
       mobile_user.send_pushes(notification)
     else
-      current_app.mobile_users.where(
-        environment: "production"
-      ).find_each { |mobile_user| mobile_user.send_pushes(notification) }
+      SendPushesToEveryoneJob.perform_later(current_app, notification)
     end
 
     render json: {}
