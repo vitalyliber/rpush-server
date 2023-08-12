@@ -11,7 +11,6 @@ class PushNotificationsController < ApplicationController
     end
     if params.dig(:mobile_user, :external_key).present?
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
-      p mobile_users_params
       send_message.call(mobile_user)
     else
       current_app.mobile_users.where(
