@@ -1,5 +1,6 @@
 class SendPushesToEveryoneJob < ApplicationJob
   queue_as :default
+  include ::ErrorHandling
 
   def perform(current_app, notification)
     current_app.mobile_users.where(

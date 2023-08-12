@@ -135,6 +135,7 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
          },
          headers: server_access_headers
     assert_response :success
+    perform_enqueued_jobs
     assert_equal Rpush::Apnsp8::Notification.count, 2
     assert_equal Rpush::Gcm::Notification.count, 2
     assert_response 200
