@@ -1,21 +1,20 @@
 class PushNotificationsController < ApplicationController
   def create
-    send_message = lambda do |mobile_user|
-      mobile_user.send_pushes(
-        title: message_params[:title],
-        message: message_params[:message],
-        device_type: params[:device_type] || 'all',
-        data: message_params[:data]&.to_unsafe_h || {},
-        data_notification: message_params[:data_notification]&.to_unsafe_h || {}
-      )
-    end
+    notification = {
+      title: message_params[:title],
+      message: message_params[:message],
+      device_type: params[:device_type] || 'all',
+      data: message_params[:data]&.to_unsafe_h || {},
+      data_notification: message_params[:data_notification]&.to_unsafe_h || {}
+    }
+
     if params.dig(:mobile_user, :external_key).present?
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
-      send_message.call(mobile_user)
+      mobile_user.send_pushes(notification)
     else
       current_app.mobile_users.where(
         environment: "production"
-      ).find_each { |mobile_user| send_message.call(mobile_user) }
+      ).find_each { |mobile_user| mobile_user.send_pushes(notification) }
     end
 
     render json: {}
