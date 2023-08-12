@@ -1,4 +1,5 @@
 class MobileUser < ApplicationRecord
+  # TODO do we still need the environment field?
   enum environment: { development: 0, production: 1 }
   validates :external_key, :environment, :mobile_access, presence: true
   validates_uniqueness_of :external_key, scope: %i[environment mobile_access]
@@ -6,22 +7,14 @@ class MobileUser < ApplicationRecord
   belongs_to :mobile_access
 
   def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {})
-      self.mobile_devices.each do |device|
+    self.mobile_devices.each do |device|
 
       if device.ios? && %w[all ios].include?(device_type)
-        if mobile_access.apnsp8?
-          n = Rpush::Apnsp8::Notification.new
-          n.app =
-              Rpush::Apnsp8::App.find_by(
-                  name: mobile_access.app_name, environment: environment
-              )
-        else
-          n = Rpush::Apns::Notification.new
-          n.app =
-              Rpush::Apns::App.find_by(
-                  name: mobile_access.app_name, environment: environment
-              )
-        end
+        n = Rpush::Apnsp8::Notification.new
+        n.app =
+          Rpush::Apnsp8::App.find_by(
+            name: mobile_access.app_name, environment: environment
+          )
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
@@ -36,7 +29,7 @@ class MobileUser < ApplicationRecord
                    title: title,
                    data: data,
                    message: message
-                  }
+        }
         n.priority = 'high' # Optional, can be either 'normal' or 'high'
         n.content_available = true # Optional
         # Optional notification payload. See the reference below for more keys you can use!

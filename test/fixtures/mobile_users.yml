@@ -3,7 +3,9 @@
 one:
   external_key: LiberVA
   mobile_access: one
+  environment: production
 
 two:
   external_key: MartinLK
   mobile_access: two
+  environment: production

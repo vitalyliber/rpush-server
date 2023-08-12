@@ -46,17 +46,3 @@ export const createCredential = async ({ data, os }) => {
     },
   })
 }
-
-export const changeApnsCredential = async ({ apns_version }) => {
-  const access_token = localStorage.getItem('access_token')
-  return axios({
-    method: 'post',
-    url: '/apps/change_apns',
-    data: {
-      apns_version,
-    },
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  })
-}

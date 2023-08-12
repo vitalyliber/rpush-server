@@ -8,10 +8,8 @@ one:
   server_token: one
   client_token: one_client
   app_name: one
-  email: wow@wow.com
 
 two:
   server_token: two
   client_token: two_client
   app_name: two
-  email: wow@wow.com

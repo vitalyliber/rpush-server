@@ -51,7 +51,6 @@ RailsAdmin.config do |config|
 
   config.model 'MobileAccess' do
     edit do
-      field :email
       field :app_name do
         visible { bindings[:object].id.blank? }
       end
@@ -64,7 +63,6 @@ RailsAdmin.config do |config|
     end
     list do
       field :app_name
-      field :email
       field :client_token
       field :server_token
       field :updated_at

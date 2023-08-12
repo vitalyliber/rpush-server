@@ -11,10 +11,11 @@ class PushNotificationsController < ApplicationController
     end
     if params.dig(:mobile_user, :external_key).present?
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
+      p mobile_users_params
       send_message.call(mobile_user)
     else
       current_app.mobile_users.where(
-        environment: params.dig(:mobile_user, :environment)
+        environment: "production"
       ).find_each { |mobile_user| send_message.call(mobile_user) }
     end
 
@@ -23,15 +24,12 @@ class PushNotificationsController < ApplicationController
 
   private
 
-  # def message_params
-  #   params.require(:message).permit(:title, :message, :data)
-  # end
   def message_params
     params[:message]
   end
 
   def mobile_users_params
-    params.require(:mobile_user).permit(:external_key, :environment)
-      .try { |hash| hash.merge(mobile_access: current_app) }
+    params.require(:mobile_user).permit(:external_key)
+      .try { |hash| hash.merge(mobile_access: current_app, environment: "production") }
   end
 end

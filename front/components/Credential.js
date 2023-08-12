@@ -19,25 +19,16 @@ const Credential = ({ app: { name, id, updated_at, environment } }) => {
     <div key={id} className="card mt-4">
       <div className="card-body">
         <h5 className="card-title">
-          {name}
-          {os === 'ios' ? (
+          {os === 'ios' ? 'Apnsp8 credentials' : 'Firebase credentials'}
+          {os === 'ios' && (
             <Fragment>
-              <span className="badge badge-primary ml-2">iOS</span>
-              {environment === 'development' ? (
-                <span className="badge badge-pill badge-secondary ml-2">
-                  {environment}
-                </span>
-              ) : (
-                <span className="badge badge-pill badge-warning ml-2">
-                  {environment}
-                </span>
-              )}
+              <span className="invisible" data-env={environment}>
+                {environment}
+              </span>
             </Fragment>
-          ) : (
-            <span className="badge badge-success ml-2">Android</span>
           )}
         </h5>
-        <h6 className="card-subtitle mb-2 text-muted">
+        <h6 className="card-subtitle mt-2 mb-4 text-muted">
           {moment(updated_at).format('LLL')}
         </h6>
         {showDangerousActions ? (

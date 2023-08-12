@@ -71,7 +71,5 @@ gem 'rpush', '6.0.1'
 # RailsAdmin is a Rails engine that provides an easy-to-use interface for managing your data.
 gem 'rails_admin', "2.2.1"
 
-# Provides a ruby language library for working with email addresses.
-gem 'email_address'
 gem 'prettier'
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '40dd02bb6b442535f97c35326c0383bc67146ac4'
