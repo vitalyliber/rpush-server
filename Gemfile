@@ -75,3 +75,4 @@ gem 'prettier'
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '40dd02bb6b442535f97c35326c0383bc67146ac4'
 
 gem 'excon'
+gem 'sidekiq'

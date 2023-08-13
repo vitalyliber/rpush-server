@@ -1,5 +1,6 @@
 module ErrorHandling
   extend ActiveSupport::Concern
+  include AlertsHelper
 
   included do
     rescue_from StandardError, with: :log_error
@@ -9,9 +10,7 @@ module ErrorHandling
 
   def log_error(error)
     Rails.logger.error("An error occurred: #{error.message}")
-    Excon.get("#{ENV["ALERTS_HOOK"]}An error occurred:")
-    link = "#{ENV["ALERTS_HOOK"]}#{CGI.escape(error.message.gsub('`', '').gsub('\'', ''))}"
-    Excon.get(link)
+    send_alert_to_telegram(error.message)
 
     raise error
   end

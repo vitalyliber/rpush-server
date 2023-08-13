@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  mount Sidekiq::Web => '/sidekiq'
   root 'home#index'
   resources :apps, only: [:index, :create, :destroy] do
     collection do

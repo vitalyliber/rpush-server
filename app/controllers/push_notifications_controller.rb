@@ -12,7 +12,7 @@ class PushNotificationsController < ApplicationController
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
       mobile_user.send_pushes(notification)
     else
-      SendPushesToEveryoneJob.perform_later(current_app, notification)
+      SendPushesToEveryoneJob.perform_later(current_app.id, notification.to_json)
     end
 
     render json: {}

@@ -80,10 +80,10 @@ function CustomPushForm() {
         deviceType,
         dataNotification,
       })
+      alert('Push notifications sent successfully.')
     } catch (e) {
       alert('Something went wrong.')
     } finally {
-      alert('Push notifications sent successfully.')
       setLoading(false)
     }
   }
