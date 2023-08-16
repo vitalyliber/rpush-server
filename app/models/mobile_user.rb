@@ -11,19 +11,17 @@ class MobileUser < ApplicationRecord
 
       if device.ios? && %w[all ios].include?(device_type)
         n = Rpush::Apnsp8::Notification.new
-        n.app =
-          Rpush::Apnsp8::App.find_by(
-            name: mobile_access.app_name, environment: environment
-          )
+        n.app = apnsp8
         n.device_token = device.device_token
         n.alert = { "title": title, "body": message }
         n.sound = 'default'
         n.data = data
         n.save!
       end
+
       if device.android? && %w[all android].include?(device_type)
         n = Rpush::Gcm::Notification.new
-        n.app = Rpush::Gcm::App.find_by_name(mobile_access.app_name)
+        n.app = firebase
         n.registration_ids = [device.device_token]
         n.data = { body: message,
                    title: title,
@@ -46,5 +44,16 @@ class MobileUser < ApplicationRecord
         n.save
       end
     end
+  end
+
+  def apnsp8
+    @apnsp8_app ||= Rpush::Apnsp8::App.find_by(
+      name: mobile_access.app_name,
+      environment: environment
+    )
+  end
+
+  def firebase
+    @firebase_app ||= Rpush::Gcm::App.find_by_name(mobile_access.app_name)
   end
 end

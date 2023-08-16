@@ -28,8 +28,8 @@ end
 
 class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
   test 'send push notifications to all platforms' do
-    assert_equal Rpush::Apnsp8::Notification.count, 0
-    assert_equal Rpush::Gcm::Notification.count, 0
+    assert_equal 0, Rpush::Apnsp8::Notification.count
+    assert_equal 0, Rpush::Gcm::Notification.count
     create_apnsp8_app
     create_gcm_app
 
@@ -45,15 +45,16 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
            }
          },
          headers: server_access_headers
-    assert_equal Rpush::Apnsp8::Notification.count, 1
-    assert_equal Rpush::Gcm::Notification.count, 1
+    perform_enqueued_jobs
+    assert_equal 1, Rpush::Apnsp8::Notification.count
+    assert_equal 1, Rpush::Gcm::Notification.count
     assert_response 200
     assert_equal '{}', body
   end
 
   test 'send push notifications to android' do
-    assert_equal Rpush::Apnsp8::Notification.count, 0
-    assert_equal Rpush::Gcm::Notification.count, 0
+    assert_equal 0, Rpush::Apnsp8::Notification.count
+    assert_equal 0, Rpush::Gcm::Notification.count
     create_gcm_app
     post push_notifications_path,
          params: {
@@ -71,8 +72,9 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
            device_type: 'android',
          },
          headers: server_access_headers
-    assert_equal Rpush::Apnsp8::Notification.count, 0
-    assert_equal Rpush::Gcm::Notification.count, 1
+    perform_enqueued_jobs
+    assert_equal 0, Rpush::Apnsp8::Notification.count
+    assert_equal 1, Rpush::Gcm::Notification.count
     assert_response 200
     assert_equal '{}', body
     # Verify that data parameters are successfully merged
@@ -82,8 +84,8 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'send push notifications for apnsp8' do
-    assert_equal Rpush::Apnsp8::Notification.count, 0
-    assert_equal Rpush::Gcm::Notification.count, 0
+    assert_equal 0, Rpush::Apnsp8::Notification.count
+    assert_equal 0, Rpush::Gcm::Notification.count
     create_apnsp8_app
     post push_notifications_path,
          params: {
@@ -99,15 +101,16 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
            device_type: 'ios'
          },
          headers: server_access_headers
+    perform_enqueued_jobs
     assert_equal '{}', body
     assert_response 200
     # assert_equal Rpush::Apnsp8::Notification.count, 1
-    assert_equal Rpush::Gcm::Notification.count, 0
+    assert_equal 0, Rpush::Gcm::Notification.count
   end
 
   test 'send push notification to all devices' do
-    assert_equal Rpush::Apnsp8::Notification.count, 0
-    assert_equal Rpush::Gcm::Notification.count, 0
+    assert_equal 0, Rpush::Apnsp8::Notification.count
+    assert_equal 0, Rpush::Gcm::Notification.count
     create_apnsp8_app
     create_gcm_app
     post push_notifications_path,
@@ -122,8 +125,11 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
            }
          },
          headers: server_access_headers
-    assert_equal Rpush::Apnsp8::Notification.count, 1
-    assert_equal Rpush::Gcm::Notification.count, 1
+    perform_enqueued_jobs
+    clear_enqueued_jobs
+    assert_empty(enqueued_jobs)
+    assert_equal 1, Rpush::Apnsp8::Notification.count
+    assert_equal 1, Rpush::Gcm::Notification.count
     # send to all devices
     post push_notifications_path,
          params: {
@@ -136,8 +142,8 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
          headers: server_access_headers
     assert_response :success
     perform_enqueued_jobs
-    assert_equal Rpush::Apnsp8::Notification.count, 2
-    assert_equal Rpush::Gcm::Notification.count, 2
+    assert_equal 2, Rpush::Apnsp8::Notification.count
+    assert_equal 2, Rpush::Gcm::Notification.count
     assert_response 200
     assert_equal '{}', body
   end

@@ -10,7 +10,7 @@ class PushNotificationsController < ApplicationController
 
     if params.dig(:mobile_user, :external_key).present?
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
-      mobile_user.send_pushes(notification)
+      SendPushesToUserJob.perform_later(mobile_user.id, notification.to_json)
     else
       SendPushesToEveryoneJob.perform_later(current_app.id, notification.to_json)
     end
