@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import dig from 'object-dig'
 import { useForm } from 'react-hook-form'
 import {
@@ -10,30 +10,50 @@ import {
   FormText,
 } from 'reactstrap'
 import { sendPushNotification } from '../api/pushNotifications'
-import dynamic from "next/dynamic";
-const ReactJson = dynamic(import("react-json-view"), {ssr: false});
-import createPersistedState from "use-persisted-state";
-import Link from "next/link";
+import dynamic from 'next/dynamic'
+const ReactJson = dynamic(import('react-json-view'), { ssr: false })
+import createPersistedState from 'use-persisted-state'
+import Link from 'next/link'
+
+const getRealCustomValue = (value) => {
+  let serverValue = 'all'
+  if (value === 'ios') {
+    serverValue = 'Apnsp8'
+  }
+  if (value === 'android') {
+    serverValue = 'Firebase'
+  }
+  return serverValue
+}
+
+const convertToRealCustomValue = (value) => {
+  let serverValue = 'all'
+  if (value === 'Apnsp8') {
+    serverValue = 'ios'
+  }
+  if (value === 'Firebase') {
+    serverValue = 'android'
+  }
+  return serverValue
+}
 
 function CustomPushForm() {
-  const storageDeviceType = createPersistedState("devise_type");
-  const storageFieldData = createPersistedState("field_data");
-  const storageDataNotification = createPersistedState("data_notification");
-  const storageEnvironment = createPersistedState("environment");
-  const storageExternalKey = createPersistedState("external_key");
-  const storageTitle = createPersistedState("title");
-  const storageMessage = createPersistedState("message");
+  const storageDeviceType = createPersistedState('devise_type')
+  const storageFieldData = createPersistedState('field_data')
+  const storageDataNotification = createPersistedState('data_notification')
+  const storageExternalKey = createPersistedState('external_key')
+  const storageTitle = createPersistedState('title')
+  const storageMessage = createPersistedState('message')
 
-  const [loading, setLoading] = useState(false);
-  const [environment, setEnvironment] = storageEnvironment('development');
-  const [fieldData, setFieldData] = storageFieldData({});
+  const [loading, setLoading] = useState(false)
+  const [fieldData, setFieldData] = storageFieldData({})
   const [dataNotification, setDataNotification] = storageDataNotification({})
-  const [deviceType, setDeviceType] = storageDeviceType("all");
-  const [externalKey, setExternalKey] = storageExternalKey("");
-  const [title, setTitle] = storageTitle("");
-  const [message, setMessage] = storageMessage("");
+  const [deviceType, setDeviceType] = storageDeviceType('all')
+  const [externalKey, setExternalKey] = storageExternalKey('')
+  const [title, setTitle] = storageTitle('')
+  const [message, setMessage] = storageMessage('')
 
-  const [trigger, setTrigger] = useState(false);
+  const [trigger, setTrigger] = useState(false)
 
   useEffect(() => {
     setTrigger(!trigger)
@@ -53,16 +73,15 @@ function CustomPushForm() {
   const onSubmit = async (data) => {
     try {
       setLoading(true)
-      console.log('onSubmit', data, deviceType, environment, fieldData, dataNotification )
+      console.log('onSubmit', data, deviceType, fieldData, dataNotification)
       await sendPushNotification({
         ...data,
-        environment,
         fieldData,
         deviceType,
-        dataNotification
+        dataNotification,
       })
+      alert('Push notifications sent successfully.')
     } catch (e) {
-      console.log('onSubmitError')
       alert('Something went wrong.')
     } finally {
       setLoading(false)
@@ -118,44 +137,48 @@ function CustomPushForm() {
         <FormGroup>
           <Label>Data</Label>
           <ReactJson
-              name={"data"}
-              src={fieldData}
-              onEdit={(res) => setFieldData(res.updated_src)}
-              onAdd={(res) => setFieldData(res.updated_src)}
-              onDelete={(res) => setFieldData(res.updated_src)}
+            name={'data'}
+            src={fieldData}
+            onEdit={(res) => setFieldData(res.updated_src)}
+            onAdd={(res) => setFieldData(res.updated_src)}
+            onDelete={(res) => setFieldData(res.updated_src)}
           />
           {handleErrors(['data'])}
         </FormGroup>
-        {
-          (deviceType === "all" || deviceType === "android") && (
-            <FormGroup>
-              <Label>Data notification</Label>
-              <ReactJson
-                name={"dataNotification"}
-                src={dataNotification}
-                onEdit={(res) => setDataNotification(res.updated_src)}
-                onAdd={(res) => setDataNotification(res.updated_src)}
-                onDelete={(res) => setDataNotification(res.updated_src)}
-              />
-              {handleErrors(['dataNotification'])}
-              <FormText>The field needs to setup channel_id and android_channel_id (links
-                <Link
-                  href={"https://stackoverflow.com/questions/45937291/how-to-specify-android-notification-channel-for-fcm-push-messages-in-android-8"}
-                  target={"_blank"}
-                >
-                  {" stackowerflow "}
-                </Link>
-                and
-                <Link
-                  href={"https://developer.android.com/develop/ui/views/notifications#ManageChannels"}
-                  target={"_blank"}
-                >
-                  {" docs"}
-                </Link>)
-              </FormText>
-            </FormGroup>
-          )
-        }
+        {(deviceType === 'all' || deviceType === 'android') && (
+          <FormGroup>
+            <Label>Data notification</Label>
+            <ReactJson
+              name={'dataNotification'}
+              src={dataNotification}
+              onEdit={(res) => setDataNotification(res.updated_src)}
+              onAdd={(res) => setDataNotification(res.updated_src)}
+              onDelete={(res) => setDataNotification(res.updated_src)}
+            />
+            {handleErrors(['dataNotification'])}
+            <FormText>
+              The field needs to setup channel_id and android_channel_id (links
+              <Link
+                href={
+                  'https://stackoverflow.com/questions/45937291/how-to-specify-android-notification-channel-for-fcm-push-messages-in-android-8'
+                }
+                target={'_blank'}
+              >
+                {' stackowerflow '}
+              </Link>
+              and
+              <Link
+                href={
+                  'https://developer.android.com/develop/ui/views/notifications#ManageChannels'
+                }
+                target={'_blank'}
+              >
+                {' docs'}
+              </Link>
+              )
+            </FormText>
+          </FormGroup>
+        )}
         <FormGroup>
           <Label>External Key</Label>
           <Input
@@ -174,17 +197,19 @@ function CustomPushForm() {
           </FormText>
         </FormGroup>
         <FormGroup>
-          <Label>Devise type</Label>
+          <Label>Cloud messaging providers</Label>
           <Input
-              type={"select"}
-              className="mb-4"
-              name={"device_type"}
-              value={deviceType}
-              onChange={(e) => setDeviceType(e.target.value)}
+            type={'select'}
+            className="mb-4"
+            name={'device_type'}
+            value={getRealCustomValue(deviceType)}
+            onChange={(e) =>
+              setDeviceType(convertToRealCustomValue(e.target.value))
+            }
           >
             <option>all</option>
-            <option>ios</option>
-            <option>android</option>
+            <option>Apnsp8</option>
+            <option>Firebase</option>
           </Input>
         </FormGroup>
         <input
@@ -193,17 +218,6 @@ function CustomPushForm() {
           type="submit"
           value="Send"
         />
-        <Input
-          onChange={(el) => setEnvironment(el.target.value)}
-          value={environment}
-          type="select"
-          name="select"
-          id="exampleSelect"
-          className="mb-4"
-        >
-          <option>development</option>
-          <option>production</option>
-        </Input>
       </Form>
     </div>
   )

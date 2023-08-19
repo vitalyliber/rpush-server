@@ -92,16 +92,19 @@ GEM
     concurrent-ruby (1.1.9)
     connection_pool (2.4.0)
     crass (1.0.6)
-    dotenv (0.7.0)
-    email_address (0.1.11)
-      netaddr (~> 2.0)
-      simpleidn
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
+    et-orbi (1.2.7)
+      tzinfo
+    excon (0.100.0)
     execjs (2.7.0)
     ffi (1.15.5)
-    foreman (0.64.0)
-      dotenv (~> 0.7.0)
-      thor (>= 0.13.6)
+    fugit (1.8.1)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (0.5.2)
       activesupport (>= 5.0)
     haml (5.2.2)
@@ -155,7 +158,6 @@ GEM
       connection_pool (~> 2.2)
     net-http2 (0.18.5)
       http-2 (~> 0.11)
-    netaddr (2.0.3)
     nio4r (2.5.8)
     nokogiri (1.12.3)
       mini_portile2 (~> 2.6.1)
@@ -165,6 +167,7 @@ GEM
     public_suffix (3.0.3)
     puma (6.2.2)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-pjax (1.1.0)
@@ -215,6 +218,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    redis (4.8.1)
     regexp_parser (1.2.0)
     remotipart (1.4.4)
     rpush (6.0.1)
@@ -229,6 +233,8 @@ GEM
       webpush (~> 1.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
+    rufus-scheduler (3.9.1)
+      fugit (~> 1.1, >= 1.1.6)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -242,8 +248,14 @@ GEM
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
-    simpleidn (0.1.1)
-      unf (~> 0.1.4)
+    sidekiq (6.5.9)
+      connection_pool (>= 2.2.5, < 3)
+      rack (~> 2.0)
+      redis (>= 4.5.0, < 5)
+    sidekiq-scheduler (5.0.3)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 6, < 8)
+      tilt (>= 1.4.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -264,9 +276,6 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.19)
       execjs (>= 0.3.0, < 3)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.5)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -290,8 +299,8 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   chromedriver-helper
-  email_address
-  foreman
+  dotenv-rails (= 2.7.6)
+  excon
   jbuilder (~> 2.11.5)
   listen (>= 3.0.5, < 3.2)
   mimemagic!
@@ -303,6 +312,8 @@ DEPENDENCIES
   rpush (= 6.0.1)
   sass-rails (~> 6.0)
   selenium-webdriver
+  sidekiq
+  sidekiq-scheduler
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data

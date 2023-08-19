@@ -1,4 +1,5 @@
 class MobileUser < ApplicationRecord
+  # TODO do we still need the environment field?
   enum environment: { development: 0, production: 1 }
   validates :external_key, :environment, :mobile_access, presence: true
   validates_uniqueness_of :external_key, scope: %i[environment mobile_access]
@@ -6,52 +7,57 @@ class MobileUser < ApplicationRecord
   belongs_to :mobile_access
 
   def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {})
-      self.mobile_devices.each do |device|
+    self.mobile_devices.each do |device|
 
-      if device.ios? && %w[all ios].include?(device_type)
-        if mobile_access.apnsp8?
+      callback = -> (msg) { device.delete if msg.include?("Device token is invalid") }
+
+      handle_exceptions(true, callback) do
+        if device.ios? && %w[all ios].include?(device_type)
           n = Rpush::Apnsp8::Notification.new
-          n.app =
-              Rpush::Apnsp8::App.find_by(
-                  name: mobile_access.app_name, environment: environment
-              )
-        else
-          n = Rpush::Apns::Notification.new
-          n.app =
-              Rpush::Apns::App.find_by(
-                  name: mobile_access.app_name, environment: environment
-              )
+          n.app = apnsp8
+          n.device_token = device.device_token
+          n.alert = { "title": title, "body": message }
+          n.sound = 'default'
+          n.data = data
+          n.save!
         end
-        n.device_token = device.device_token
-        n.alert = { "title": title, "body": message }
-        n.sound = 'default'
-        n.data = data
-        n.save!
-      end
-      if device.android? && %w[all android].include?(device_type)
-        n = Rpush::Gcm::Notification.new
-        n.app = Rpush::Gcm::App.find_by_name(mobile_access.app_name)
-        n.registration_ids = [device.device_token]
-        n.data = { body: message,
-                   title: title,
-                   data: data,
-                   message: message
-                  }
-        n.priority = 'high' # Optional, can be either 'normal' or 'high'
-        n.content_available = true # Optional
-        # Optional notification payload. See the reference below for more keys you can use!
 
-        notification = {
-          body: message,
-          title: title,
-          icon: 'ic_notification',
-        }
+        if device.android? && %w[all android].include?(device_type)
+          n = Rpush::Gcm::Notification.new
+          n.app = firebase
+          n.registration_ids = [device.device_token]
+          n.data = { body: message,
+                     title: title,
+                     data: data,
+                     message: message
+          }
+          n.priority = 'high' # Optional, can be either 'normal' or 'high'
+          n.content_available = true # Optional
+          # Optional notification payload. See the reference below for more keys you can use!
 
-        notification.merge!(data_notification)
+          notification = {
+            body: message,
+            title: title,
+            icon: 'ic_notification',
+          }
 
-        n.notification = notification
-        n.save
+          notification.merge!(data_notification)
+
+          n.notification = notification
+          n.save!
+        end
       end
     end
+  end
+
+  def apnsp8
+    @apnsp8_app ||= Rpush::Apnsp8::App.find_by(
+      name: mobile_access.app_name,
+      environment: environment
+    )
+  end
+
+  def firebase
+    @firebase_app ||= Rpush::Gcm::App.find_by_name(mobile_access.app_name)
   end
 end

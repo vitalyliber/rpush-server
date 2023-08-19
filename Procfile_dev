@@ -1,2 +1,3 @@
-web: yarn --cwd front run dev & bundle exec puma -C config/puma.rb -p 3000 && fg
+web: yarn --cwd front run dev & bundle exec rails s -p 3000 && fg
 rpush: bundle exec rpush start -e $RAILS_ENV -f
+worker: bundle exec sidekiq

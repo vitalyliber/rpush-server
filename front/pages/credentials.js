@@ -3,14 +3,16 @@ import CredentialsForm from '../components/CredentialsForm'
 import CredentialsList from '../components/CredentialsList'
 import { Context } from '../components/ContextProvider'
 import Header from '../components/Header'
+import useCredentials from '../hooks/useCredentials'
 
 export default function Credentials() {
   const { os, setOs } = useContext(Context)
+  const { data } = useCredentials({ os })
 
   return (
     <div className="container">
       <Header />
-      <h4 className="mb-3">APNS/Firebase credentials</h4>
+      <h4 className="mb-3">Cloud messaging credentials</h4>
       <ul className="nav nav-tabs">
         <li className="nav-item">
           <a
@@ -21,7 +23,7 @@ export default function Credentials() {
             className={`nav-link ${os === 'android' ? 'active' : null}`}
             href="#"
           >
-            Android
+            Firebase
           </a>
         </li>
         <li className="nav-item">
@@ -33,12 +35,12 @@ export default function Credentials() {
             className={`nav-link ${os === 'ios' ? 'active' : null}`}
             href="#"
           >
-            iOS
+            Apnsp8
           </a>
         </li>
       </ul>
       <br />
-      <CredentialsForm />
+      {data?.apps?.length === 0 && <CredentialsForm />}
       <CredentialsList />
     </div>
   )

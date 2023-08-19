@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ::ErrorHandling
   skip_before_action :verify_authenticity_token
   before_action :restrict_access
   rescue_from ActiveRecord::RecordNotFound, with: :error_to_json_response
