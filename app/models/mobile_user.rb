@@ -9,39 +9,43 @@ class MobileUser < ApplicationRecord
   def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {})
     self.mobile_devices.each do |device|
 
-      if device.ios? && %w[all ios].include?(device_type)
-        n = Rpush::Apnsp8::Notification.new
-        n.app = apnsp8
-        n.device_token = device.device_token
-        n.alert = { "title": title, "body": message }
-        n.sound = 'default'
-        n.data = data
-        n.save!
-      end
+      callback = -> (msg) { device.delete if msg.include?("Device token is invalid") }
 
-      if device.android? && %w[all android].include?(device_type)
-        n = Rpush::Gcm::Notification.new
-        n.app = firebase
-        n.registration_ids = [device.device_token]
-        n.data = { body: message,
-                   title: title,
-                   data: data,
-                   message: message
-        }
-        n.priority = 'high' # Optional, can be either 'normal' or 'high'
-        n.content_available = true # Optional
-        # Optional notification payload. See the reference below for more keys you can use!
+      handle_exceptions(true, callback) do
+        if device.ios? && %w[all ios].include?(device_type)
+          n = Rpush::Apnsp8::Notification.new
+          n.app = apnsp8
+          n.device_token = device.device_token
+          n.alert = { "title": title, "body": message }
+          n.sound = 'default'
+          n.data = data
+          n.save!
+        end
 
-        notification = {
-          body: message,
-          title: title,
-          icon: 'ic_notification',
-        }
+        if device.android? && %w[all android].include?(device_type)
+          n = Rpush::Gcm::Notification.new
+          n.app = firebase
+          n.registration_ids = [device.device_token]
+          n.data = { body: message,
+                     title: title,
+                     data: data,
+                     message: message
+          }
+          n.priority = 'high' # Optional, can be either 'normal' or 'high'
+          n.content_available = true # Optional
+          # Optional notification payload. See the reference below for more keys you can use!
 
-        notification.merge!(data_notification)
+          notification = {
+            body: message,
+            title: title,
+            icon: 'ic_notification',
+          }
 
-        n.notification = notification
-        n.save
+          notification.merge!(data_notification)
+
+          n.notification = notification
+          n.save!
+        end
       end
     end
   end

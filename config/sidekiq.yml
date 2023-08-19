@@ -1,0 +1,5 @@
+:scheduler:
+  :schedule:
+    clean_delivered_notifications_job:
+      cron: '0 0 * * *'   # At 00:00 every day
+      class: CleanDeliveredNotificationsJob

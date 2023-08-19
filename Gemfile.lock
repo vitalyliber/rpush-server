@@ -97,9 +97,14 @@ GEM
       dotenv (= 2.7.6)
       railties (>= 3.2)
     erubi (1.10.0)
+    et-orbi (1.2.7)
+      tzinfo
     excon (0.100.0)
     execjs (2.7.0)
     ffi (1.15.5)
+    fugit (1.8.1)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (0.5.2)
       activesupport (>= 5.0)
     haml (5.2.2)
@@ -162,6 +167,7 @@ GEM
     public_suffix (3.0.3)
     puma (6.2.2)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-pjax (1.1.0)
@@ -227,6 +233,8 @@ GEM
       webpush (~> 1.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
+    rufus-scheduler (3.9.1)
+      fugit (~> 1.1, >= 1.1.6)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -244,6 +252,10 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
+    sidekiq-scheduler (5.0.3)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 6, < 8)
+      tilt (>= 1.4.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -301,6 +313,7 @@ DEPENDENCIES
   sass-rails (~> 6.0)
   selenium-webdriver
   sidekiq
+  sidekiq-scheduler
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
