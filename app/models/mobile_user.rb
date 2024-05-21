@@ -34,7 +34,7 @@ class MobileUser < ApplicationRecord
           n.priority = 'high' # Optional, can be either 'normal' or 'high'
           # Disable this field when need to debug on iOS simulator
           # It needs to wake up the data-only apps on iOS
-          n.content_available = content_available
+          n.content_available = content_available || false
           # Optional notification payload. See the reference below for more keys you can use!
 
           notification = {
