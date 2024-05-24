@@ -1,4 +1,10 @@
 class MobileDevicesController < ApplicationController
+  def index
+    @mobile_user = MobileUser.find_by(mobile_access: @current_app, external_key: params[:external_key])
+
+    render json: @mobile_user.present? ? @mobile_user.mobile_devices : []
+  end
+
   def create
     mobile_device =
         MobileDevice.find_by(mobile_device_params) ||
@@ -22,7 +28,7 @@ class MobileDevicesController < ApplicationController
 
   def restrict_access
     authenticate_or_request_with_http_token do |token, _options|
-      token.present? && (@current_app = MobileAccess.find_by(client_token: token))
+      token.present? && (@current_app = MobileAccess.find_by(client_token: token) || MobileAccess.find_by(server_token: token))
     end
   end
 
