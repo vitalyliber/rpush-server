@@ -5,7 +5,8 @@ class PushNotificationsController < ApplicationController
       message: message_params[:message],
       device_type: params[:device_type] || 'all',
       data: message_params[:data]&.to_unsafe_h || {},
-      data_notification: message_params[:data_notification]&.to_unsafe_h || {}
+      data_notification: message_params[:data_notification]&.to_unsafe_h || {},
+      content_available: params[:content_available]
     }
 
     if params.dig(:mobile_user, :external_key).present?

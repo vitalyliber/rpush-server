@@ -6,7 +6,7 @@ class MobileUser < ApplicationRecord
   has_many :mobile_devices
   belongs_to :mobile_access
 
-  def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {})
+  def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {}, content_available: false)
     self.mobile_devices.each do |device|
 
       callback = -> (msg) { device.delete if msg.include?("Device token is invalid") }
@@ -32,7 +32,9 @@ class MobileUser < ApplicationRecord
                      message: message
           }
           n.priority = 'high' # Optional, can be either 'normal' or 'high'
-          n.content_available = true # Optional
+          # Disable this field when need to debug on iOS simulator
+          # It needs to wake up the data-only apps on iOS
+          n.content_available = content_available || false
           # Optional notification payload. See the reference below for more keys you can use!
 
           notification = {

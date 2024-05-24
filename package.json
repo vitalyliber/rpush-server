@@ -7,11 +7,10 @@
     "prettier": "^2.8.8"
   },
   "engines": {
-    "node": "18.16.0"
+    "node": "20.9.0"
   },
   "scripts": {
     "s": "overmind start -f Procfile_dev",
-    "build": "cd front && yarn install && yarn build",
     "d": "git push dokku@gym-server.casply.com:rpush-server HEAD:master -f",
     "cr": "redis-cli flushall"
   }

@@ -10,6 +10,6 @@ Rails.application.routes.draw do
       post :change_apns
     end
   end
-  resources :mobile_devices, only: [:create, :destroy]
+  resources :mobile_devices, only: [:index, :create, :destroy]
   resources :push_notifications, only: [:create]
 end
