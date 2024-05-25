@@ -1,6 +1,6 @@
 class MobileDevicesController < ApplicationController
   def index
-    @mobile_user = MobileUser.find_by(mobile_access: @current_app, external_key: params[:external_key])
+    @mobile_user = MobileUser.find_by(mobile_access: @current_app, external_key: params[:external_key], environment: :production)
 
     render json: @mobile_user.present? ? @mobile_user.mobile_devices : []
   end
