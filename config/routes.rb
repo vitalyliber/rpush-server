@@ -12,4 +12,5 @@ Rails.application.routes.draw do
   end
   resources :mobile_devices, only: [:index, :create, :destroy]
   resources :push_notifications, only: [:create]
+  resources :accesses, only: [:index]
 end
