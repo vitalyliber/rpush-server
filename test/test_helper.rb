@@ -19,4 +19,8 @@ class ActiveSupport::TestCase
   def body_json
     JSON.parse body
   end
+
+  def easy_body
+    OpenStruct.new(body_json)
+  end
 end
