@@ -1,6 +1,6 @@
-<% baseUrl = Rails.env.production? ? "https://rpush-client.casply.com" : "http://localhost:3000" %>
+<% baseUrl = Rails.env.production? ? "https://rpush.casply.com" : "http://localhost:3000" %>
 <div style="display: flex; flex-direction: column;">
-  <a href="<%= Rails.env.production? ? 'https://rpush-client.casply.com' : 'http://localhost:5001/' %>">Send Notifications</a>
+  <a href="<%= Rails.env.production? ? 'https://rpush-client.casply.com' : 'http://localhost:50001/' %>">Send Notifications</a>
   <a href="<%= baseUrl %>/admin">Admin Panel</a>
   <a href="<%= baseUrl %>/sidekiq">Worker Dashboard</a>
 </div>
