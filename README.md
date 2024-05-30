@@ -114,7 +114,7 @@ Params:
     },
     "mobile_user": {
         "external_key": 123, // server user identifier
-        "environment": "development" // development/production
+        "environment": "production" // development/production
     },
     device_type: 'ios' // ios/android/all
 }
