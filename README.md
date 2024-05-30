@@ -110,13 +110,15 @@ Params:
 {
     "message": {
         "title": "New message",
-        "message": "Hello Mark"
+        "message": "Hello Mark",
+        "data": {},
+        "data_notification": {}
     },
     "mobile_user": {
         "external_key": 123, // server user identifier
         "environment": "production" // development/production
     },
-    device_type: 'ios' // ios/android/all
+    device_type: 'android' // ios/android/all
 }
 ```
 
