@@ -11,10 +11,10 @@ class SendPushesToEveryoneJob < ApplicationJob
         environment: "production"
       ).find_in_batches(batch_size: 1000) do |mobile_users|
 
-        if index < 7
-          index += 1
-          next
-        end
+        # if index < 7
+        #   index += 1
+        #   next
+        # end
 
         handle_exceptions(raise_error: false) do
           mobile_users.each do |mobile_user|
