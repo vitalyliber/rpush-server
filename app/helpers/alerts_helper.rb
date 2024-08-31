@@ -20,7 +20,7 @@ module AlertsHelper
     attempts = 0
 
     begin
-      sleep 1
+      sleep attempts
       attempts += 1
       yield
     rescue => e
