@@ -1,6 +1,5 @@
 module AlertsHelper
   def send_alert_to_telegram(message)
-    sleep 1
     # Skip some messages here (they are not errors)
     return if message.include?("PG::UniqueViolation")
 
@@ -10,7 +9,28 @@ module AlertsHelper
   def send_telegram_message(message)
     if Rails.env.production?
       link = "#{ENV["ALERTS_HOOK"]}#{CGI.escape(message).truncate(4096)}"
-      Excon.get(link)
+
+      with_retries(max_attempts: 10) do
+        Excon.get(link)
+      end
+    end
+  end
+
+  def with_retries(max_attempts: 5, &block)
+    attempts = 0
+
+    begin
+      sleep 1
+      attempts += 1
+      yield
+    rescue => e
+      if attempts < max_attempts
+        Rails.logger.warn("Attempt #{attempts} failed: #{e.message}. Retrying...")
+        retry
+      else
+        Rails.logger.error("All #{max_attempts} attempts failed: #{e.message}")
+        # raise
+      end
     end
   end
 end
