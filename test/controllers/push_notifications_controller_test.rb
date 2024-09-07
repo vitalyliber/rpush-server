@@ -21,7 +21,7 @@ V8LRZVm4
 end
 
 def create_gcm_app
-  Rpush::Gcm::App.find_or_create_by!(
+  Rpush::Fcm::App.find_or_create_by!(
     name: MobileAccess.find_by(server_token: 'one').app_name, auth_key: 'xyz'
   )
 end
@@ -29,7 +29,7 @@ end
 class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
   test 'send push notifications to all platforms' do
     assert_equal 0, Rpush::Apnsp8::Notification.count
-    assert_equal 0, Rpush::Gcm::Notification.count
+    assert_equal 0, Rpush::Fcm::Notification.count
     create_apnsp8_app
     create_gcm_app
 
@@ -47,14 +47,14 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
          headers: server_access_headers
     perform_enqueued_jobs
     assert_equal 1, Rpush::Apnsp8::Notification.count
-    assert_equal 1, Rpush::Gcm::Notification.count
+    assert_equal 1, Rpush::Fcm::Notification.count
     assert_response 200
     assert_equal '{}', body
   end
 
   test 'send push notifications to android' do
     assert_equal 0, Rpush::Apnsp8::Notification.count
-    assert_equal 0, Rpush::Gcm::Notification.count
+    assert_equal 0, Rpush::Fcm::Notification.count
     create_gcm_app
     post push_notifications_path,
          params: {
@@ -66,7 +66,7 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
                data_param: 'value'
              },
              data_notification: {
-               data_notification_param: 'value'
+               channel_id: 'value'
              }
            },
            device_type: 'android',
@@ -74,18 +74,22 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
          headers: server_access_headers
     perform_enqueued_jobs
     assert_equal 0, Rpush::Apnsp8::Notification.count
-    assert_equal 1, Rpush::Gcm::Notification.count
+    assert_equal 1, Rpush::Fcm::Notification.count
     assert_response 200
     assert_equal '{}', body
     # Verify that data parameters are successfully merged
-    lastNotification = Rpush::Gcm::Notification.last
-    assert lastNotification.notification['data_notification_param']
+    lastNotification = Rpush::Fcm::Notification.last
+    # p lastNotification.data
+    # p '44444'
+    # p lastNotification.data["android"]
+    assert lastNotification.data['channel_id']
+    p lastNotification
     assert lastNotification.data.dig('data', 'data_param')
   end
 
   test 'send push notifications for apnsp8' do
     assert_equal 0, Rpush::Apnsp8::Notification.count
-    assert_equal 0, Rpush::Gcm::Notification.count
+    assert_equal 0, Rpush::Fcm::Notification.count
     create_apnsp8_app
     post push_notifications_path,
          params: {
@@ -105,12 +109,12 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal '{}', body
     assert_response 200
     # assert_equal Rpush::Apnsp8::Notification.count, 1
-    assert_equal 0, Rpush::Gcm::Notification.count
+    assert_equal 0, Rpush::Fcm::Notification.count
   end
 
   test 'send push notification to all devices' do
     assert_equal 0, Rpush::Apnsp8::Notification.count
-    assert_equal 0, Rpush::Gcm::Notification.count
+    assert_equal 0, Rpush::Fcm::Notification.count
     create_apnsp8_app
     create_gcm_app
     post push_notifications_path,
@@ -129,7 +133,7 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
     clear_enqueued_jobs
     assert_empty(enqueued_jobs)
     assert_equal 1, Rpush::Apnsp8::Notification.count
-    assert_equal 1, Rpush::Gcm::Notification.count
+    assert_equal 1, Rpush::Fcm::Notification.count
     # send to all devices
     post push_notifications_path,
          params: {
@@ -143,7 +147,7 @@ class PushNotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     perform_enqueued_jobs
     assert_equal 2, Rpush::Apnsp8::Notification.count
-    assert_equal 2, Rpush::Gcm::Notification.count
+    assert_equal 2, Rpush::Fcm::Notification.count
     assert_response 200
     assert_equal '{}', body
   end

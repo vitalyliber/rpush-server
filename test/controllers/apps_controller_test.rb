@@ -46,14 +46,14 @@ V8LRZVm4
 
     assert_response 201
     assert_equal '{}', body
-    assert_equal 1, Rpush::Gcm::App.count
+    assert_equal 1, Rpush::Fcm::App.count
 
-    delete app_path(Rpush::Gcm::App.last.id),
+    delete app_path(Rpush::Fcm::App.last.id),
            params: { os: 'android' }, headers: server_access_headers
 
     assert_response 200
     assert_equal '{}', body
-    assert_equal 0, Rpush::Gcm::App.count
+    assert_equal 0, Rpush::Fcm::App.count
   end
 
   test 'unsuccessful destroy' do
@@ -61,6 +61,6 @@ V8LRZVm4
            params: { os: 'android' }, headers: server_access_headers
 
     assert_response 404
-    assert_equal 0, Rpush::Gcm::App.count
+    assert_equal 0, Rpush::Fcm::App.count
   end
 end

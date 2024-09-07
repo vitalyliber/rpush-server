@@ -26,12 +26,17 @@ Rpush.configure do |config|
   # Define a custom logger.
   # config.logger = MyLogger.new
 
-  config.apns.feedback_receiver.enabled = true
-  config.apns.feedback_receiver.frequency = 60
+  # By default in foreground mode logs are directed both to the logger and to stdout.
+  # If the logger goes to stdout, you can disable foreground logging to avoid duplication.
+  # config.foreground_logging = false
+
+  # config.apns.feedback_receiver.enabled = true
+  # config.apns.feedback_receiver.frequency = 60
 
 end
 
 Rpush.reflect do |on|
+
   # Called with a Rpush::Apns::Feedback instance when feedback is received
   # from the APNs that a notification has failed to be delivered.
   # Further notifications should not be sent to the device.
@@ -44,10 +49,7 @@ Rpush.reflect do |on|
   # Called when a notification is queued internally for delivery.
   # The internal queue for each app runner can be inspected:
   #
-  # Rpush::Daemon::AppRunner.runners.each do |app_id, runner|
-  #   runner.app
-  #   runner.queue_size
-  # end
+  # Rpush::Daemon::AppRunner.status
   #
   # on.notification_enqueued do |notification|
   # end
@@ -84,6 +86,23 @@ Rpush.reflect do |on|
   # Called for each recipient which successfully receives a notification. This
   # can occur more than once for the same notification when there are multiple
   # recipients.
+  # on.fcm_delivered_to_recipient do |notification|
+  # end
+
+  # Called for each recipient which fails to receive a notification. This
+  # can occur more than once for the same notification when there are multiple
+  # recipients. (do not handle invalid registration IDs here)
+  # on.fcm_failed_to_recipient do |notification, error|
+  # end
+
+  # Called when the FCM returns a failure that indicates an invalid device token.
+  # You will need to delete the device token from your records.
+  # on.fcm_invalid_device_token do |app, error, device_token|
+  # end
+
+  # Called for each recipient which successfully receives a notification. This
+  # can occur more than once for the same notification when there are multiple
+  # recipients.
   # on.gcm_delivered_to_recipient do |notification, registration_id|
   # end
 
@@ -100,26 +119,19 @@ Rpush.reflect do |on|
 
   # Called when the GCM returns a failure that indicates an invalid registration id.
   # You will need to delete the registration_id from your records.
-  on.gcm_invalid_registration_id do |app, error, registration_id|
-    MobileDevice.find_by(device_type: :android, device_token: registration_id).delete
-  end
+  # @TODO add mechanics to clean old tokens
+  # on.gcm_invalid_registration_id do |app, error, registration_id|
+  #   MobileDevice.find_by(device_type: :android, device_token: registration_id).delete
+  # end
 
   # Called when an SSL certificate will expire within 1 month.
   # Implement on.error to catch errors raised when the certificate expires.
-  on.ssl_certificate_will_expire do |app, expiration_time|
-    mobile_access = MobileAccess.find_by(app_name: app.name)
-    if mobile_access.present?
-      PusherMailer.ssl_will_expire(mobile_access.email, app.name, expiration_time).deliver_now
-    end
-  end
+  # on.ssl_certificate_will_expire do |app, expiration_time|
+  # end
 
   # Called when an SSL certificate has been revoked.
-  on.ssl_certificate_revoked do |app, error|
-    mobile_access = MobileAccess.find_by(app_name: app.name)
-    if mobile_access.present?
-      PusherMailer.ssl_was_revoked(mobile_access.email, app.name).deliver_now
-    end
-  end
+  # on.ssl_certificate_revoked do |app, error|
+  # end
 
   # Called when the ADM returns a canonical registration ID.
   # You will need to replace old_id with canonical_id in your records.

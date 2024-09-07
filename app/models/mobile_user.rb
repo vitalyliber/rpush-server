@@ -23,30 +23,31 @@ class MobileUser < ApplicationRecord
         end
 
         if device.android? && %w[all android].include?(device_type)
-          n = Rpush::Gcm::Notification.new
-          n.app = firebase
-          n.registration_ids = [device.device_token]
-          n.data = { body: message,
-                     title: title,
-                     data: data,
-                     message: message
-          }
-          n.priority = 'high' # Optional, can be either 'normal' or 'high'
-          # Disable this field when need to debug on iOS simulator
-          # It needs to wake up the data-only apps on iOS
-          n.content_available = content_available || false
-          # Optional notification payload. See the reference below for more keys you can use!
-
           notification = {
-            body: message,
-            title: title,
-            icon: 'ic_notification',
+            token: device.device_token,
+            notification: {
+              title: title,
+              body: message,
+            },
+            android: {
+              "priority": "high"
+            }.merge!(data_notification),
+            apns: {
+              payload: {
+                aps: {
+                  'content-available': content_available ? 1  : 0,
+                },
+              },
+            },
+            data: data
           }
+          response = `node ./fcm_send.js '#{notification.to_json}' '#{Rpush::Fcm::App.last.json_key}'`
 
-          notification.merge!(data_notification)
-
-          n.notification = notification
-          n.save!
+          if response.include?("sent successfully")
+            Rails.logger.info("Message sent successfully: #{self.external_key} #{device.device_token}")
+          else
+            Rails.logger.error("Sending error: #{self.external_key} #{device.device_token} #{response}")
+          end
         end
       end
     end
@@ -60,6 +61,6 @@ class MobileUser < ApplicationRecord
   end
 
   def firebase
-    @firebase_app ||= Rpush::Gcm::App.find_by_name(mobile_access.app_name)
+    @firebase_app ||= Rpush::Fcm::App.find_by_name(mobile_access.app_name)
   end
 end
