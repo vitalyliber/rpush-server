@@ -30,8 +30,11 @@ class MobileUser < ApplicationRecord
               body: message,
             },
             android: {
-              "priority": "high"
-            }.merge!(data_notification),
+              "priority": "high",
+              notification: {
+                channelId: "default"
+              }.merge!(data_notification.slice(*[:channelId, :title, :body, :icon, :color, :sound, :tag, :click_action]))
+            },
             apns: {
               payload: {
                 aps: {
