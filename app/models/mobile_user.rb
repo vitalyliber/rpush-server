@@ -42,7 +42,7 @@ class MobileUser < ApplicationRecord
                 },
               },
             },
-            data: data
+            data: data.transform_values(&:to_s)
           }
           response = `node ./fcm_send.js '#{notification.to_json}' '#{Rpush::Fcm::App.last.json_key}'`
 
