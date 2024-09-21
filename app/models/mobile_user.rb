@@ -7,6 +7,12 @@ class MobileUser < ApplicationRecord
   belongs_to :mobile_access
 
   def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {}, content_available: false)
+    if device_type == "android"
+      tokens = self.mobile_devices.pluck(:device_token)
+      PushNotificationService.send_pushes(tokens: tokens, title: title, message: message, data: data, data_notification: data_notification, content_available: content_available)
+      return
+    end
+
     self.mobile_devices.each do |device|
 
       callback = -> (msg) { device.delete if msg.include?("Device token is invalid") }
@@ -20,37 +26,6 @@ class MobileUser < ApplicationRecord
           n.sound = 'default'
           n.data = data
           n.save!
-        end
-
-        if device.android? && %w[all android].include?(device_type)
-          notification = {
-            token: device.device_token,
-            notification: {
-              title: title,
-              body: message,
-            },
-            android: {
-              "priority": "high",
-              notification: {
-                channelId: "default"
-              }.merge!(data_notification.slice(*[:channelId, :title, :body, :icon, :color, :sound, :tag, :click_action]))
-            },
-            apns: {
-              payload: {
-                aps: {
-                  'content-available': content_available ? 1  : 0,
-                },
-              },
-            },
-            data: data.transform_values(&:to_s)
-          }
-          response = `node ./fcm_send.js '#{notification.to_json}' '#{Rpush::Fcm::App.last.json_key}'`
-
-          if response.include?("sent successfully")
-            Rails.logger.info("Message sent successfully: #{self.external_key} #{device.device_token}")
-          else
-            Rails.logger.error("Sending error: #{self.external_key} #{device.device_token} #{response}")
-          end
         end
       end
     end
