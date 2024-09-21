@@ -13,7 +13,7 @@ class PushNotificationsController < ApplicationController
       mobile_user = MobileUser.find_or_create_by!(mobile_users_params)
       SendPushesToUserJob.perform_later(mobile_user.id, notification.to_json)
     else
-      SendPushesToEveryoneJob.perform_later(current_app.id, notification.to_json)
+      SendPushesToEveryoneFirebaseJob.perform_later(current_app.id, notification.to_json) if params[:device_type] === "android"
     end
 
     render json: {}
