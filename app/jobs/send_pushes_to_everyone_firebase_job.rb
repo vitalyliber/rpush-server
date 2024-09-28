@@ -14,7 +14,7 @@ class SendPushesToEveryoneFirebaseJob < ApplicationJob
 
         tokens = MobileDevice.where(mobile_user_id: ids, device_type: :android).pluck(:device_token)
 
-        PushNotificationService.send_pushes(tokens: tokens, **notification)
+        PushNotificationService.send_pushes(tokens: tokens, **JSON.parse(notification))
 
         send_telegram_message("The worker handled the #{index} batch (#{tokens.count} tokens in a collection)")
 
