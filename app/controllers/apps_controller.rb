@@ -2,7 +2,7 @@ class AppsController < ApplicationController
   def index
     apps =
       if params[:os] == 'android'
-        Rpush::Gcm::App.where(name: current_app.app_name)
+        Rpush::Fcm::App.where(name: current_app.app_name)
       elsif params[:os] == 'ios'
         Rpush::Apnsp8::App.where(name: current_app.app_name)
       else
@@ -16,9 +16,10 @@ class AppsController < ApplicationController
   def create
     app =
       if app_params[:os] == 'android'
-        app = Rpush::Gcm::App.new
+        app = Rpush::Fcm::App.new
         app.name = current_app.app_name
-        app.auth_key = app_params[:auth_key]
+        app.firebase_project_id = app_params[:firebase_project_id]
+        app.json_key = app_params[:json_key]
         app.connections = app_params[:connections] || 1
         app
       elsif app_params[:os] == 'ios'
@@ -51,7 +52,7 @@ class AppsController < ApplicationController
   def destroy
     app =
       if params[:os] == 'android'
-        Rpush::Gcm::App.find_by!(id: params[:id], name: current_app.app_name)
+        Rpush::Fcm::App.find_by!(id: params[:id], name: current_app.app_name)
       elsif params[:os] == 'ios'
         Rpush::Apnsp8::App.find_by!(
           id: params[:id], name: current_app.app_name
@@ -74,7 +75,8 @@ class AppsController < ApplicationController
       :password,
       :connections,
       :os,
-      :auth_key,
+      :firebase_project_id,
+      :json_key,
       :apn_key,
       :apn_key_id,
       :team_id,

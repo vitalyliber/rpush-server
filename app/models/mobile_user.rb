@@ -7,6 +7,12 @@ class MobileUser < ApplicationRecord
   belongs_to :mobile_access
 
   def send_pushes(title: '', message: '', device_type: '', data: {}, data_notification: {}, content_available: false)
+    if device_type == "android"
+      tokens = self.mobile_devices.pluck(:device_token)
+      PushNotificationService.send_pushes(tokens: tokens, title: title, message: message, data: data, data_notification: data_notification, content_available: content_available)
+      return
+    end
+
     self.mobile_devices.each do |device|
 
       callback = -> (msg) { device.delete if msg.include?("Device token is invalid") }
@@ -21,33 +27,6 @@ class MobileUser < ApplicationRecord
           n.data = data
           n.save!
         end
-
-        if device.android? && %w[all android].include?(device_type)
-          n = Rpush::Gcm::Notification.new
-          n.app = firebase
-          n.registration_ids = [device.device_token]
-          n.data = { body: message,
-                     title: title,
-                     data: data,
-                     message: message
-          }
-          n.priority = 'high' # Optional, can be either 'normal' or 'high'
-          # Disable this field when need to debug on iOS simulator
-          # It needs to wake up the data-only apps on iOS
-          n.content_available = content_available || false
-          # Optional notification payload. See the reference below for more keys you can use!
-
-          notification = {
-            body: message,
-            title: title,
-            icon: 'ic_notification',
-          }
-
-          notification.merge!(data_notification)
-
-          n.notification = notification
-          n.save!
-        end
       end
     end
   end
@@ -60,6 +39,6 @@ class MobileUser < ApplicationRecord
   end
 
   def firebase
-    @firebase_app ||= Rpush::Gcm::App.find_by_name(mobile_access.app_name)
+    @firebase_app ||= Rpush::Fcm::App.find_by_name(mobile_access.app_name)
   end
 end
