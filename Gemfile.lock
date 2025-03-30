@@ -205,7 +205,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.5.2)
-    rack (2.2.3)
+    rack (2.2.7)
     rack-pjax (1.1.0)
       nokogiri (~> 1.5)
       rack (>= 1.1)
