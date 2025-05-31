@@ -3,6 +3,7 @@ module AlertsHelper
     # Skip some messages here (they are not errors)
     return if message.include?("PG::UniqueViolation")
 
+    Honeybadger.notify(message) 
     send_telegram_message("An error occurred in the RPush Server:")
     send_telegram_message(message)
   end

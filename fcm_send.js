@@ -11,6 +11,7 @@ const args = process.argv
 //   android: {
 //     priority: 'high',
 //   },
+//   topic: 'general',
 // }
 
 const message = JSON.parse(args[2])
@@ -24,10 +25,18 @@ admin.initializeApp({
 
 async function sendPushNotification() {
   try {
-    const response = await admin.messaging().sendEachForMulticast(message)
-    console.log('Message sent successfully:', response)
+    console.log('Sending message (JS):', message)
+    if (message.topic) {
+      const response = await admin.messaging().send(message)
+      console.log('Message sent successfully (JS): TOPIC', response)
+      return
+    } else {
+      const response = await admin.messaging().sendEachForMulticast(message)
+      console.log('Message sent successfully (JS): MULTICAST', response)
+      return
+    }
   } catch (error) {
-    console.error('Error sending message:', error.message)
+    console.error('Error sending message (JS):', error.message)
   }
 }
 

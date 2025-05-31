@@ -77,3 +77,5 @@ gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '40dd02bb6b442535f97c3532
 gem 'excon'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
+
+gem "honeybadger", "~> 5.27"
